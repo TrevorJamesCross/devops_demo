@@ -1,2 +1,5 @@
+[core]
+    remote = gcp_bucket
 ['remote "gcp_bucket"']
     url = gs://devops_demo_bucket
+    version_aware = true
