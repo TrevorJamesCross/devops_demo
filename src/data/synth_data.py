@@ -18,11 +18,12 @@ import pandas as pd
 # import datetime libraries
 import datetime
 
-# import plotting libraries
-import matplotlib.pyplot as plt
+# import iterative.ai libraries
+from mlem.api import save
 
 # import support libraries
 import random as rand
+from os.path import expanduser
 
 # set random seed
 rand.seed(36)
@@ -212,13 +213,6 @@ for cat_name in cat_dict:
 # convert list_of_dicts to df
 df = pd.DataFrame(list_of_dicts)
 
-# save time series
-prods = [rand.choice(list(cat_dict[cat])) for cat in cat_dict]
-for prod in prods:
-    df_to_plot = df.loc[df['prod_id']==prod][['sale_date', 'units_sold']]
-    plt.figure(figsize=(20,12))
-    plt.title(prod)
-    plt.xlabel('sale_date')
-    plt.ylabel('units_sold')
-    plt.plot(df_to_plot['sale_date'], df_to_plot['units_sold'])
-    plt.show()
+# save df using mlem
+output_path = f"{expanduser('~')}/projects/devops_demo/data/raw/product_sales_data.csv"
+save(df, output_path)

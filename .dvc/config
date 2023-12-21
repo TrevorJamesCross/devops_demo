@@ -1,0 +1,2 @@
+['remote "gcp_bucket"']
+    url = gs://devops_demo_bucket
