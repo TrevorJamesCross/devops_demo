@@ -1,7 +1,0 @@
-outs:
-- hash: md5
-  path: raw
-  files:
-  - relpath: product_sales_data.csv
-    md5: 8a4a094c7ce25dd553747021c0912fe1
-    size: 6019237

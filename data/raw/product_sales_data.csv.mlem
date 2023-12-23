@@ -1,0 +1,28 @@
+artifacts:
+  data:
+    hash: 8a4a094c7ce25dd553747021c0912fe1
+    size: 6019237
+    type: dvc
+    uri: product_sales_data.csv
+object_type: data
+reader:
+  data_type:
+    columns:
+    - prod_id
+    - unit_price
+    - prod_category
+    - sale_date
+    - units_sold
+    dtypes:
+    - object
+    - float64
+    - object
+    - object
+    - int64
+    index_cols: []
+    type: dataframe
+  format: csv
+  type: pandas
+requirements:
+- module: pandas
+  version: 2.1.4
