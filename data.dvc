@@ -3,16 +3,8 @@ outs:
   path: data
   files:
   - relpath: raw/product_sales_data.csv
-    md5: 66f358b66f1db1d960aea39a9183447f
-    size: 6113064
-    cloud:
-      gcp_bucket:
-        etag: 089ab788b3e3a083031001
-        version_id: '1703170193628058'
+    md5: 9d1049b6a4f5dc22733980d370a516f3
+    size: 6019237
   - relpath: raw/product_sales_data.csv.mlem
-    md5: 27b9ac7383fe324c18badd2f6580f1a8
+    md5: 79d74666b7545b0ef4d867d799adbcdb
     size: 441
-    cloud:
-      gcp_bucket:
-        etag: 088eed94b3e3a083031001
-        version_id: '1703170193831566'
