@@ -221,18 +221,7 @@ for cat_name in cat_dict:
 # convert list_of_dicts to df
 df = pd.DataFrame(list_of_dicts)
 prods = [rand.choice(list(cat_dict[cat_name])) for cat_name in cat_dict]
-plt.style.use('fivethirtyeight')
-plt.rcParams['lines.linewidth'] = 1.5
-plt.rcParams['font.size'] = 10
-
-for prod_id in prods:
-    plt.figure()
-    plt.title(prod_id)
-    df_to_plot = df[df['prod_id'] == prod_id]
-    plt.plot(df_to_plot['sale_date'], df_to_plot['units_sold'])
-plt.show()
 
 # save df using mlem
-raise
 output_path = f"{expanduser('~')}/projects/devops_demo/data/raw/product_sales_data.csv"
 save(df, output_path)
