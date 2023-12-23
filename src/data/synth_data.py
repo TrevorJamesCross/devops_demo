@@ -14,6 +14,7 @@ temoral components.
 # import standard libraries
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # import datetime libraries
 import datetime
@@ -26,7 +27,7 @@ import random as rand
 from os.path import expanduser
 
 # set random seed
-rand.seed(36)
+rand.seed(64)
 
 #%% ------------------------
 #-- ---Define Sets of IDs---
@@ -163,18 +164,15 @@ cat_dict = {
 
 # define category parameters
 price_ranges_by_cat = {cat: vals for cat, vals in zip([cat_name for cat_name in cat_dict], [(100, 300), (1, 25), (10, 15), (5, 60)])}
-base_ranges_by_cat = {cat: vals for cat, vals in zip([cat_name for cat_name in cat_dict], [(20, 40), (20, 60), (50, 110), (20, 30)])}
-staying_power_by_cat = {cat: val for cat, val in zip([cat_name for cat_name in cat_dict], [0, -5, 10, 10])}
+base_ranges_by_cat = {cat: vals for cat, vals in zip([cat_name for cat_name in cat_dict], [(10, 20), (15, 40), (40, 90), (10, 30)])}
 
 # define empty objects to hold price info and deterministic components for each prod_id
 price_dict = {}
 base_comps = []
-det_comps = []
 for cat_name in cat_dict:
     for prod_id in cat_dict[cat_name]:
         price_dict.update({prod_id: rand.uniform(*price_ranges_by_cat[cat_name])})
-        base_comps.append(rand.uniform(*base_ranges_by_cat[cat_name]))
-        det_comps.append(staying_power_by_cat[cat_name]*np.exp(-10**-4*price_dict[prod_id]**2))
+        base_comps.append(rand.uniform(*base_ranges_by_cat[cat_name]) + 15*np.exp(-10**-4*price_dict[prod_id]**2))
 
 #%% -------------------
 #-- ---Generate Data---
@@ -193,18 +191,28 @@ list_of_dicts = []
 for cat_name in cat_dict:
     for id_num, prod_id in enumerate(cat_dict[cat_name]):
 
-        units_sold = base_comps[id_num] + det_comps[id_num]
+        units_sold = base_comps[id_num]
 
         for date_num, date in enumerate(date_range):
 
             if date_num > 0:
-                units_sold = list_of_dicts[date_num-1]["units_sold"] + rand.gauss(mu=0.75, sigma=3) + 0.25*np.sin(np.pi/6*date.month + np.pi/2)
+
+                # introduce noise
+                units_sold = list_of_dicts[date_num-1]["units_sold"] + rand.gauss(mu=0.5, sigma=2)
+
+                # introduce stochastic temporal correlation
+                if cat_name != 'machines' and date_num > 2:
+                    temp_corr_coeff = rand.uniform(0.1, 0.3)
+                    units_sold = (1-temp_corr_coeff)*units_sold + temp_corr_coeff*sum([list_of_dicts[date_num-n]["units_sold"] for n in range(2)])/3
+
+                # introduce periodicity
+                units_sold += 0.05*np.sin(np.pi/6*date.month + np.pi/2)
 
             list_of_dicts.append({"prod_id": prod_id,
                                   "unit_price": round(price_dict[prod_id], 3),
                                   "prod_category": cat_name,
                                   "sale_date": date,
-                                  "units_sold": int(abs(units_sold))
+                                  "units_sold": int(units_sold) if units_sold > 0 else int(rand.choice(range(2)))
                                   })
 #%% -----------------
 #-- ---Export Data---
@@ -212,7 +220,19 @@ for cat_name in cat_dict:
 
 # convert list_of_dicts to df
 df = pd.DataFrame(list_of_dicts)
+prods = [rand.choice(list(cat_dict[cat_name])) for cat_name in cat_dict]
+plt.style.use('fivethirtyeight')
+plt.rcParams['lines.linewidth'] = 1.5
+plt.rcParams['font.size'] = 10
+
+for prod_id in prods:
+    plt.figure()
+    plt.title(prod_id)
+    df_to_plot = df[df['prod_id'] == prod_id]
+    plt.plot(df_to_plot['sale_date'], df_to_plot['units_sold'])
+plt.show()
 
 # save df using mlem
+raise
 output_path = f"{expanduser('~')}/projects/devops_demo/data/raw/product_sales_data.csv"
 save(df, output_path)
