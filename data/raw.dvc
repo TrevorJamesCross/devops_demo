@@ -1,6 +1,11 @@
 outs:
-- md5: 0eb48f4fbf610bea8b47e82cb7b9ef81.dir
-  size: 6019237
-  nfiles: 1
-  hash: md5
+- hash: md5
   path: raw
+  files:
+  - relpath: product_sales_data.csv
+    md5: 9d1049b6a4f5dc22733980d370a516f3
+    size: 6019237
+    cloud:
+      gcp_bucket:
+        etag: 08dbccbdfa90a683031001
+        version_id: '1703354221684315'
