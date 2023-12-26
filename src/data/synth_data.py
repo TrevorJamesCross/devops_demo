@@ -220,7 +220,6 @@ for cat_name in cat_dict:
 
 # convert list_of_dicts to df
 df = pd.DataFrame(list_of_dicts)
-prods = [rand.choice(list(cat_dict[cat_name])) for cat_name in cat_dict]
 
 # save df using mlem
 output_path = f"{expanduser('~')}/projects/devops_demo/data/raw/product_sales_data.csv"
