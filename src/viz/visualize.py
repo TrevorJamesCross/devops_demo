@@ -53,6 +53,25 @@ trn_df = trn_df['units_sold']
 tst_df.index = tst_df['sale_date']
 tst_df = tst_df['units_sold']
 
+final_df = pd.concat([trn_df, tst_df], ignore_index=False)
+
 # plot timeseries
-save_path = f"{expanduser('~')}/projects/devops_demo/reports/figures/example_ts.png"
-plot_differenced_ts(trn_df, save_path=save_path, differencing_param=2, title=prod_id)
+base_path = f"{expanduser('~')}/projects/devops_demo/reports/figures/"
+save_path = base_path + "example_ts.png"
+
+plot_differenced_ts(final_df,
+                    save_path=save_path,
+                    differencing_param=1,
+                    title=prod_id)
+
+# ---------------------
+# ---Plot ACF & PACF---
+# ---------------------
+
+# plot ACF & PACF
+save_path = base_path + "example_acf.png"
+plot_acf(final_df,
+         save_path=save_path,
+         differencing_param=1,
+         title=prod_id,
+         num_xticks=25)

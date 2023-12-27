@@ -17,6 +17,9 @@ import numpy as np
 # import plotting libraries
 import matplotlib.pyplot as plt
 
+# import statistics libraries
+import statsmodels.api as sm
+
 # import scikit-learn functions
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (mean_squared_error, mean_absolute_error,
@@ -60,7 +63,7 @@ def plot_differenced_ts(series, save_path=None, differencing_param=1, title="Tim
 
     axes[1].set(title=title + " (Differenced)",
                 ylabel=None,
-                xticks = series.index[range(0, len(series), len(series)//num_xticks)]
+                xticks = diff_series.index[range(0, len(series), len(series)//num_xticks)]
                 )
     axes[1].legend()
     axes[1].plot(diff_series.index, [0]*len(series), 'r')
@@ -68,8 +71,39 @@ def plot_differenced_ts(series, save_path=None, differencing_param=1, title="Tim
     # save plot
     if save_path != None:
         plt.savefig(save_path)
+        print(f"\nSaved plot {title} to path {save_path}")
+    else:
+        plt.show()
+
 
 # define function to plot ACF & PACF
+def plot_acf(series, save_path=None, differencing_param=1, title="ACF", num_xticks=25):
+
+    # difference timeseries
+    diff_series = series
+    for order in range(differencing_param):
+        diff_series = diff_series.diff()
+
+    # set style params
+    plt.style.use('bmh')
+
+    # define figure & axes
+    fig, axes = plt.subplots(2, 1, figsize=(20, 14))
+    fig.suptitle(title, fontsize=20)
+
+    # plot ACF
+    fig = sm.graphics.tsa.plot_acf(diff_series.values, lags=num_xticks, ax=axes[0])
+
+    # plot PACF
+    fig = sm.graphics.tsa.plot_pacf(diff_series.values, lags=num_xticks, ax=axes[1])
+
+    # save plot
+    if save_path != None:
+        plt.savefig(save_path)
+        print(f"\nSaved plot {title} to path {save_path}")
+    else:
+        plt.show()
+
 
 # ---------------------------------------
 #---Define Model Evaluation Functions---

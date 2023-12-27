@@ -206,7 +206,7 @@ for cat_name in cat_dict:
                     units_sold = (1-temp_corr_coeff)*units_sold + temp_corr_coeff*sum([list_of_dicts[date_num-n]["units_sold"] for n in range(2)])/3
 
                 # introduce periodicity
-                units_sold += 0.05*np.sin(np.pi/6*date.month + np.pi/2)
+                units_sold += 0.1*np.sin(np.pi/6*date.month + np.pi/2)
 
             list_of_dicts.append({"prod_id": prod_id,
                                   "unit_price": round(price_dict[prod_id], 3),
