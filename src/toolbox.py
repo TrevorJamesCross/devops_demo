@@ -1,7 +1,7 @@
 """
 DevOps Demo: Toolbox
 Author: Trevor Cross
-Last Updated: 12/24/23
+Last Updated: 12/28/23
 
 Series of functions used to assist in project development
 """
@@ -59,7 +59,7 @@ def plot_differenced_ts(series, save_path=None, differencing_param=1, title="Tim
     diff_series = series
     for order in range(differencing_param):
         diff_series = diff_series.diff()
-        axes[1].plot(diff_series.index, diff_series.values, label=f"Order {order}")
+        axes[1].plot(diff_series.index, diff_series.values, label=f"Order {order + 1}")
 
     axes[1].set(title=title + " (Differenced)",
                 ylabel=None,
@@ -77,25 +77,26 @@ def plot_differenced_ts(series, save_path=None, differencing_param=1, title="Tim
 
 
 # define function to plot ACF & PACF
-def plot_acf(series, save_path=None, differencing_param=1, title="ACF", num_xticks=25):
-
-    # difference timeseries
-    diff_series = series
-    for order in range(differencing_param):
-        diff_series = diff_series.diff()
+def plot_acf(series, save_path=None, differencing_param=1, title=None, num_xticks=25):
 
     # set style params
     plt.style.use('bmh')
 
     # define figure & axes
     fig, axes = plt.subplots(2, 1, figsize=(20, 14))
-    fig.suptitle(title, fontsize=20)
+    if title != None:
+        fig.suptitle(title, fontsize=20)
+
+    # difference timeseries
+    diff_series = series
+    for order in range(differencing_param):
+        diff_series = diff_series.diff()
 
     # plot ACF
-    fig = sm.graphics.tsa.plot_acf(diff_series.values, lags=num_xticks, ax=axes[0])
+    fig = sm.graphics.tsa.plot_acf(diff_series.values[1:], lags=num_xticks, ax=axes[0])
 
     # plot PACF
-    fig = sm.graphics.tsa.plot_pacf(diff_series.values, lags=num_xticks, ax=axes[1])
+    fig = sm.graphics.tsa.plot_pacf(diff_series.values[1:], lags=num_xticks, ax=axes[1])
 
     # save plot
     if save_path != None:

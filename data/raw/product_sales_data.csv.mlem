@@ -1,7 +1,7 @@
 artifacts:
   data:
-    hash: 8a4a094c7ce25dd553747021c0912fe1
-    size: 6019237
+    hash: 82c557df1cae635f27ca699bbc9296ab
+    size: 5989569
     type: dvc
     uri: product_sales_data.csv
 object_type: data

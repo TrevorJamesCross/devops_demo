@@ -1,7 +1,7 @@
 """
 DevOps Demo: Visualize Data
 Author: Trevor Cross
-Last Updated: 12/24/23
+Last Updated: 12/28/23
 
 Visualize and explore raw data to aid in decision making.
 """
@@ -74,4 +74,4 @@ plot_acf(final_df,
          save_path=save_path,
          differencing_param=1,
          title=prod_id,
-         num_xticks=25)
+         num_xticks=10)

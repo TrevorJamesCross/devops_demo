@@ -158,9 +158,9 @@ cat_dict = {
     'apparel': apparel_set
 }
 
-#%% -----------------------------
-#-- ---Define Trend Components---
-#-- -----------------------------
+#%% -----------------------
+#-- ---Define Components---
+#-- -----------------------
 
 # define category parameters
 price_ranges_by_cat = {cat: vals for cat, vals in zip([cat_name for cat_name in cat_dict], [(100, 300), (1, 25), (10, 15), (5, 60)])}
@@ -197,23 +197,28 @@ for cat_name in cat_dict:
 
             if date_num > 0:
 
-                # introduce noise
-                units_sold = list_of_dicts[date_num-1]["units_sold"] + rand.gauss(mu=0.5, sigma=2)
+                # introduce trend
+                units_sold = list_of_dicts[date_num - 1]['units_sold'] + 0.002*date_num
 
-                # introduce stochastic temporal correlation
-                if cat_name != 'machines' and date_num > 2:
-                    temp_corr_coeff = rand.uniform(0.1, 0.3)
-                    units_sold = (1-temp_corr_coeff)*units_sold + temp_corr_coeff*sum([list_of_dicts[date_num-n]["units_sold"] for n in range(2)])/3
+                # introduce brownian noise
+                units_sold += rand.gauss(mu=0, sigma=20)
 
-                # introduce periodicity
-                units_sold += 0.1*np.sin(np.pi/6*date.month + np.pi/2)
+                # introduce seasonality
+                units_sold += 5*np.sin(np.pi/6*date.month + np.pi/2)
+
+                # introduce autocorrelation
+                if date_num > 2:
+                    weights = [rand.uniform(0,1) for _ in range(3)]
+                    weights = [w/sum(weights) for w in weights]
+                    units_sold = weights[0]*units_sold + weights[1]*list_of_dicts[date_num-1]['units_sold'] + weights[2]*list_of_dicts[date_num-2]['units_sold']
 
             list_of_dicts.append({"prod_id": prod_id,
-                                  "unit_price": round(price_dict[prod_id], 3),
+                                  "unit_price": round(price_dict[prod_id], 2),
                                   "prod_category": cat_name,
                                   "sale_date": date,
                                   "units_sold": int(units_sold) if units_sold > 0 else int(rand.choice(range(2)))
                                   })
+
 #%% -----------------
 #-- ---Export Data---
 #-- -----------------
@@ -224,3 +229,4 @@ df = pd.DataFrame(list_of_dicts)
 # save df using mlem
 output_path = f"{expanduser('~')}/projects/devops_demo/data/raw/product_sales_data.csv"
 save(df, output_path)
+print(f"\nSaved time series data to path {output_path}")
