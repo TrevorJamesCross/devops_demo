@@ -1,9 +1,9 @@
 outs:
-- md5: 82c557df1cae635f27ca699bbc9296ab
-  size: 5989569
+- md5: 69e970bdac2a29645443d28f53369c02
+  size: 5916638
   hash: md5
   path: product_sales_data.csv
   cloud:
     gcp_bucket:
-      etag: 08e28ec3d590b283031001
-      version_id: '1703766461040482'
+      etag: 08959ff3a4c9b783031001
+      version_id: '1703953458581397'

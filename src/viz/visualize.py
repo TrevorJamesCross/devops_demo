@@ -1,7 +1,7 @@
 """
 DevOps Demo: Visualize Data
 Author: Trevor Cross
-Last Updated: 12/28/23
+Last Updated: 12/30/23
 
 Visualize and explore raw data to aid in decision making.
 """
@@ -42,36 +42,39 @@ splits_gen = split_by_cat_generator(df, 'prod_id', test_size=0.2, shuffle=False,
 # ---Plot Example Time Series---
 # ------------------------------
 
-# get example time series split & plotting info
-trn_df, tst_df = next(splits_gen)
-prod_id = trn_df['prod_id'].loc[0]
+# iterate examples
+for exam_num in range(3):
 
-# transform dfs
-trn_df.index = trn_df['sale_date']
-trn_df = trn_df['units_sold']
+    # get example time series split & plotting info
+    trn_df, tst_df = next(splits_gen)
+    prod_id = trn_df['prod_id'].iloc[0]
 
-tst_df.index = tst_df['sale_date']
-tst_df = tst_df['units_sold']
+    # transform dfs
+    trn_df.index = trn_df['sale_date']
+    trn_df = trn_df['units_sold']
 
-final_df = pd.concat([trn_df, tst_df], ignore_index=False)
+    tst_df.index = tst_df['sale_date']
+    tst_df = tst_df['units_sold']
 
-# plot timeseries
-base_path = f"{expanduser('~')}/projects/devops_demo/reports/figures/"
-save_path = base_path + "example_ts.png"
+    final_df = pd.concat([trn_df, tst_df], ignore_index=False)
 
-plot_differenced_ts(final_df,
-                    save_path=save_path,
-                    differencing_param=1,
-                    title=prod_id)
+    # plot timeseries
+    base_path = f"{expanduser('~')}/projects/devops_demo/reports/figures/"
+    save_path = base_path + f"example_ts_{exam_num}.png"
 
-# ---------------------
-# ---Plot ACF & PACF---
-# ---------------------
+    plot_differenced_ts(final_df,
+                        save_path=save_path,
+                        differencing_param=1,
+                        title=prod_id)
 
-# plot ACF & PACF
-save_path = base_path + "example_acf.png"
-plot_acf(final_df,
-         save_path=save_path,
-         differencing_param=1,
-         title=prod_id,
-         num_xticks=10)
+    # ---------------------
+    # ---Plot ACF & PACF---
+    # ---------------------
+
+    # plot ACF & PACF
+    save_path = base_path + f"example_acf_{exam_num}.png"
+    plot_acf(final_df,
+             save_path=save_path,
+             differencing_param=1,
+             title=prod_id,
+             num_xticks=25)

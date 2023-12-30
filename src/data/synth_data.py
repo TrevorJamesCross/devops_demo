@@ -1,7 +1,7 @@
 """
 DevOps Demo: Synthesize Data
 Author: Trevor Cross
-Last Updated: 12/21/23
+Last Updated: 12/30/23
 
 Create fake time series data for multiple products based on stochastic, deterministic, &
 temoral components.
@@ -27,7 +27,8 @@ import random as rand
 from os.path import expanduser
 
 # set random seed
-rand.seed(64)
+rs = 81
+rand.seed(rs)
 
 #%% ------------------------
 #-- ---Define Sets of IDs---
@@ -198,25 +199,32 @@ for cat_name in cat_dict:
             if date_num > 0:
 
                 # introduce trend
-                units_sold = list_of_dicts[date_num - 1]['units_sold'] + 0.002*date_num
+                units_sold = list_of_dicts[date_num - 1]['units_sold'] + 0.4*np.log(date_num)
 
                 # introduce brownian noise
-                units_sold += rand.gauss(mu=0, sigma=20)
+                units_sold += rand.gauss(mu=2*np.exp(-0.25*date_num), sigma=2 + 0.01*date_num)
 
                 # introduce seasonality
-                units_sold += 5*np.sin(np.pi/6*date.month + np.pi/2)
+                units_sold += 1.5*np.sin(np.pi/6*date.month + np.pi/2)
 
                 # introduce autocorrelation
                 if date_num > 2:
-                    weights = [rand.uniform(0,1) for _ in range(3)]
+
+                    # define lag term
+                    lag = 25 if date_num > 25 else date_num
+
+                    # calculate weights
+                    weights = [np.exp(-0.25*n) for n in range(lag)]
                     weights = [w/sum(weights) for w in weights]
-                    units_sold = weights[0]*units_sold + weights[1]*list_of_dicts[date_num-1]['units_sold'] + weights[2]*list_of_dicts[date_num-2]['units_sold']
+
+                    # calc weighted units_sold
+                    units_sold = weights[0]*units_sold + sum([weights[n+1]*list_of_dicts[date_num-(n+1)]['units_sold'] for n in range(lag-1)])
 
             list_of_dicts.append({"prod_id": prod_id,
                                   "unit_price": round(price_dict[prod_id], 2),
                                   "prod_category": cat_name,
                                   "sale_date": date,
-                                  "units_sold": int(units_sold) if units_sold > 0 else int(rand.choice(range(2)))
+                                  "units_sold": int(units_sold) if units_sold > 0 else int(rand.choice(range(3)))
                                   })
 
 #%% -----------------
