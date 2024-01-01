@@ -1,10 +1,10 @@
 """
 DevOps Demo: Synthesize Data
 Author: Trevor Cross
-Last Updated: 12/30/23
+Last Updated: 01/01/24
 
-Create fake time series data for multiple products based on stochastic, deterministic, &
-temoral components.
+Create time series data using a gaussian process, & adding white noise & autoregressive
+effects.
 """
 
 #%% ----------------------
@@ -14,10 +14,17 @@ temoral components.
 # import standard libraries
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # import datetime libraries
 import datetime
+
+# import model libraries
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import Matern
+from statsmodels.tsa.ar_model import AutoReg
+
+# import plotting libraries
+import matplotlib.pyplot as plt
 
 # import iterative.ai libraries
 from mlem.api import save
@@ -30,209 +37,82 @@ from os.path import expanduser
 rs = 81
 rand.seed(rs)
 
-#%% ------------------------
-#-- ---Define Sets of IDs---
-#-- ------------------------
+#-- -----------------------------
+#-- ---Create Gaussian Process---
+#-- -----------------------------
 
-# define sets of machine product ids
-machine_set = {
-    "small_drip_machine",
-    "luxury_grinder",
-    "large_espresso_machine",
-    "compact_cold_brew_maker",
-    "premium_single_cup_brewer",
-    "automatic_french_press",
-    "artisan_pourover_device",
-    "travel_size_espresso_maker",
-    "commercial_cappuccino_machine",
-    "modern_filterless_coffee_maker",
-    "sleek_cold_brew_dispenser",
-    "retro_espresso_press",
-    "personal_pour-over_kit",
-    "digital_coffee_grinder",
-    "industrial_cold_brew_tower",
-    "classic_french_press",
-    "high_capacity_drip_brewer",
-    "smart_single_serve_machine",
-    "vintage_espresso_maker",
-    "portable_cold_brew_infuser",
-    "gourmet_pourover_station",
-    "automatic_grind_and_brew",
-    "stylish_cappuccino_system",
-    "innovative_espresso_tumbler"
-    "chrome_french_press",
-    "artisan_cold_brew_dispenser",
-    "compact_pourover_kit",
-    "premium_coffee_siphon",
-    "automatic_milk_frother",
-    "sleek_travel_french_press",
-    "prosumer_espresso_machine"
-}
+# define function to represent target values for Gaussian Process
+def target_func(X):
+    func = np.cos(X) + 2*np.log(X + 1)
+    return func.flatten()
 
-# define set of tools & accessories product ids
-tools_acc_set = {
-    "electric_gooseneck_kettle",
-    "espresso_stirrer",
-    "pourover_server",
-    "coffee_scale",
-    "milk_frother",
-    "coffee_scoop",
-    "tamper_tool",
-    "thermal_coffee_carafe",
-    "coffee_filter_papers",
-    "grind_size_adjuster",
-    "fancy_coffee_mug",
-    "bean_storage_container",
-    "drip_tray",
-    "espresso_cup_set",
-    "coffee_syrup_pump",
-    "travel_coffee_tumbler",
-    "stainless_steel_straws",
-    "pouring_kettle",
-    "coffee_grounds_disposal_bin",
-    "brewing_timer",
-    "manual_coffee_grinder",
-    "espresso_portafilter",
-    "reusable_coffee_filter",
-    "coffee_blend_mixer",
-    "adjustable_tamper",
-    "latte_art_stencils",
-    "coffee_cup_warmer",
-    "glass_pourover_carafe",
-    "digital_brew_scale",
-    "collapsible_coffee_dripper",
-    "bamboo_coffee_stirrers",
-    "vintage_coffee_spoon",
-    "decorative_coffee_tongs",
-    "siphon_coffee_maker",
-    "copper_frothing_pitcher"
-}
+# define data & obtain function values
+num_days = 180
+rng = np.random.default_rng()
+gp_data = np.sort(rng.choice(num_days, size=num_days//3, replace=False))
+gp_target = target_func(gp_data)
 
-# define set of coffee bean ids
-bean_set = {
-    "colombian_smooth_and_dark",
-    "rio_de_abejas",
-    "farmhouse_morning_brew",
-    "ethiopian_sunrise_blend",
-    "hawaiian_paradise_roast",
-    "java_jungle_explorer",
-    "mystic_mocha_delight",
-    "peruvian_harmony",
-    "moroccan_spice_infusion",
-    "sulawesi_mountain_mist",
-    "tahitian_vanilla_sunrise",
-    "sumatra_nightshade_reserve",
-    "kenyan_safari_blend",
-    "guatemalan_honey_harvest",
-    "arabian_nights_espresso",
-    "brazilian_rainforest_blend",
-    "costa_rican_cloud_forest",
-    "yirgacheffe_garden_glow",
-    "caramel_macchiato_dream",
-    "jamaican_blue_mountain",
-    "siberian_taiga_blend",
-    "madagascan_vanilla_breeze",
-    "panamanian_golden_sunrise",
-    "sardinian_sea_salt_caramel",
-    "italian_amaretto_affair"
-}
+# define the gaussian process kernel
+gp_kernel = Matern()
 
-# define set of apparel ids
-apparel_set = {
-    "espresso_novelty_shirt",
-    "ten_gallon_iced_coffee_hat",
-    "mocha_colored_cardigan",
-    "latte_art_apron",
-    "caffeine_molecule_socks",
-    "cappuccino_beanie",
-    "coffee_blossom_dress",
-    "barista_champion_tie",
-    "java_lover_hoodie",
-    "cold_brew_canvas_tote"
-}
+# define gaussian process regression object & fit
+gpr = GaussianProcessRegressor(kernel=gp_kernel)
+gpr.fit(gp_data.reshape(-1, 1), gp_target.reshape(-1, 1))
 
-# define dict of product categories
-cat_dict = {
-    'machines': machine_set,
-    'tools_&_accessories': tools_acc_set,
-    'beans': bean_set,
-    'apparel': apparel_set
-}
-
-#%% -----------------------
-#-- ---Define Components---
-#-- -----------------------
-
-# define category parameters
-price_ranges_by_cat = {cat: vals for cat, vals in zip([cat_name for cat_name in cat_dict], [(100, 300), (1, 25), (10, 15), (5, 60)])}
-base_ranges_by_cat = {cat: vals for cat, vals in zip([cat_name for cat_name in cat_dict], [(10, 20), (15, 40), (40, 90), (10, 30)])}
-
-# define empty objects to hold price info and deterministic components for each prod_id
-price_dict = {}
-base_comps = []
-for cat_name in cat_dict:
-    for prod_id in cat_dict[cat_name]:
-        price_dict.update({prod_id: rand.uniform(*price_ranges_by_cat[cat_name])})
-        base_comps.append(rand.uniform(*base_ranges_by_cat[cat_name]) + 15*np.exp(-10**-4*price_dict[prod_id]**2))
-
-#%% -------------------
-#-- ---Generate Data---
-#-- -------------------
+#-- ---------------------------------------
+#-- ---Define Dates & Obtain Predictions---
+#-- ---------------------------------------
 
 # define range of dates
-date_delta = datetime.timedelta(days=3*365)
+date_delta = datetime.timedelta(days=num_days)
 date_end = datetime.date.today()
 date_start = date_end - date_delta
 
 step_len = datetime.timedelta(days=1)
-date_range = [date_start + step_num*step_len for step_num in range(date_delta.days+1)]
+date_range = [date_start + step_num*step_len for step_num in range(date_delta.days)]
 
-# define df contents as dict
-list_of_dicts = []
-for cat_name in cat_dict:
-    for id_num, prod_id in enumerate(cat_dict[cat_name]):
+# obtain predictions from gaussian process model
+mean_targets = gpr.predict(np.arange(0, num_days, step=1).reshape(-1, 1), return_std=False)
 
-        units_sold = base_comps[id_num]
-
-        for date_num, date in enumerate(date_range):
-
-            if date_num > 0:
-
-                # introduce trend
-                units_sold = list_of_dicts[date_num - 1]['units_sold'] + 0.4*np.log(date_num)
-
-                # introduce brownian noise
-                units_sold += rand.gauss(mu=2*np.exp(-0.25*date_num), sigma=2 + 0.01*date_num)
-
-                # introduce seasonality
-                units_sold += 1.5*np.sin(np.pi/6*date.month + np.pi/2)
-
-                # introduce autocorrelation
-                if date_num > 2:
-
-                    # define lag term
-                    lag = 25 if date_num > 25 else date_num
-
-                    # calculate weights
-                    weights = [np.exp(-0.25*n) for n in range(lag)]
-                    weights = [w/sum(weights) for w in weights]
-
-                    # calc weighted units_sold
-                    units_sold = weights[0]*units_sold + sum([weights[n+1]*list_of_dicts[date_num-(n+1)]['units_sold'] for n in range(lag-1)])
-
-            list_of_dicts.append({"prod_id": prod_id,
-                                  "unit_price": round(price_dict[prod_id], 2),
-                                  "prod_category": cat_name,
-                                  "sale_date": date,
-                                  "units_sold": int(units_sold) if units_sold > 0 else int(rand.choice(range(3)))
-                                  })
-
-#%% -----------------
-#-- ---Export Data---
+#-- -----------------
+#-- ---Apply Noise---
 #-- -----------------
 
-# convert list_of_dicts to df
-df = pd.DataFrame(list_of_dicts)
+# define white noise
+white_noise = 0.5*np.random.normal(size=num_days)
+
+# define red (autoregressive) noise
+ar_model = AutoReg(white_noise, lags=3)
+ar_result = ar_model.fit()
+red_noise = ar_result.predict()
+
+# prepend zeros to red_noise
+np.put(red_noise, range(3), [0]*3)
+
+# apply noise to mean targets
+time_series = mean_targets + white_noise + red_noise
+
+#-- ------------------------
+#-- ---Plot & Export Data---
+#-- ------------------------
+
+# plot data
+plt.figure()
+plt.style.use('bmh')
+plt.plot([date_range[ind] for ind in gp_data], gp_target, label="Original")
+plt.plot(date_range, mean_targets, label="GP Predicted")
+plt.plot(date_range, time_series, label="Fully Synthesized")
+plt.title("Synthesized Time Series")
+plt.xlabel("Date")
+plt.ylabel("Value")
+plt.legend()
+
+# save plot
+save_path = f"{expanduser('~')}/projects/devops_demo/reports/figures/synthesized_data.png"
+plt.savefig(save_path)
+
+# define df with synthesized data
+df = pd.DataFrame(index=date_range, data=time_series, columns=['values'])
 
 # save df using mlem
 output_path = f"{expanduser('~')}/projects/devops_demo/data/raw/product_sales_data.csv"

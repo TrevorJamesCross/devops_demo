@@ -105,6 +105,43 @@ def plot_acf(series, save_path=None, differencing_param=1, title=None, num_xtick
     else:
         plt.show()
 
+# define function to plot timeseries forecast
+def plot_forecast(orig_ts, test_ts, forecast_obj, title="Forecast", save_path=None, num_xticks=10):
+
+    # set style params
+    plt.style.use('bmh')
+
+    # define figure
+    plt.figure()
+    plt.title(title)
+
+    # plot original timeseries
+    plt.plot(orig_ts.index, orig_ts.values, label="Original Time Series")
+
+    # plot test timeseries
+    plt.plot(test_ts.index, test_ts.values, label="Test Time Series")
+
+    # plot forecasts
+    plt.plot(test_ts.index, forecast_obj.predicted_mean.values, label="Forecast")
+
+    # plot confidence intervals
+    conf_ints = forecast_obj.conf_int(alpha=0.05)
+    plt.fill_between(test_ts.index, conf_ints.iloc[:, 0], conf_ints.iloc[:, 1], alpha=0.2, label='Confidence Intervals')
+
+    # prettify
+    plt.title(title)
+
+    ts = pd.concat([orig_ts, test_ts], ignore_index=False)
+    plt.xticks(ts.index[range(0, len(ts), len(ts)//num_xticks)])
+
+    plt.legend()
+
+    # save plot
+    if save_path != None:
+        plt.savefig(save_path)
+        print(f"\nSaved plot {title} to path {save_path}")
+    else:
+        plt.show()
 
 # ---------------------------------------
 #---Define Model Evaluation Functions---

@@ -1,9 +1,9 @@
 """
 DevOps Demo: Train Models
 Author: Trevor Cross
-Last Updated: 12/24/23
+Last Updated: 12/30/23
 
-Train multiple ARIMA models on each product id using statsmodels libraries.
+Train multiple ARIMA models on example product ids using statsmodels libraries.
 """
 
 # ----------------------
@@ -15,7 +15,7 @@ import pandas as pd
 import numpy as np
 
 # import statsmodels libraries
-from statsmodels.tsa.statespace.sarimax import SARIMAX
+from statsmodels.tsa.arima.model import ARIMA
 
 # import support libraries
 import sys
@@ -45,18 +45,31 @@ splits_gen = split_by_cat_generator(df, 'prod_id', test_size=0.2, shuffle=False,
 # ---Define & Train Models---
 # ---------------------------
 
-# define ARIMA parameters as dict
-arima_params = {}
+# iterate examples
+for exam_num in range(3):
 
-# define models
-splits = next(splits_gen)
-trn_split_df = splits[0][['sale_date', 'units_sold']]
-trn_split_df.index = trn_split_df['sale_date']
-del trn_split_df['sale_date']
+    # get example timeseries split & plotting info
+    trn_df, tst_df = next(splits_gen)
+    prod_id = trn_df['prod_id'].iloc[0]
 
-arima_model = SARIMAX(trn_split_df, trend='c', order=(1,1,1))
-arima_model.fit(disp=False)
+    # transform dfs
+    trn_df.index = trn_df['sale_date']
+    trn_df = trn_df['units_sold']
 
+    tst_df.index = tst_df['sale_date']
+    tst_df = tst_df['units_sold']
+
+    # define & fit arima model
+    model = ARIMA(trn_df, order=(2, 1, 2))
+    results = model.fit()
+
+    # get model forecast on test data
+    forecast_steps = len(tst_df)
+    forecast = results.get_forecast(steps=forecast_steps)
+
+    # plot timeseries & forecast
+    plot_forecast(trn_df, tst_df, forecast)
+    raise
 # ---------------------------------------
 # ---Evaluate & Plot Model Predictions---
 # ---------------------------------------
