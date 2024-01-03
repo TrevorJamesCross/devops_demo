@@ -1,7 +1,7 @@
 """
 DevOps Demo: Synthesize Data
 Author: Trevor Cross
-Last Updated: 01/01/24
+Last Updated: 01/02/24
 
 Create time series data using a gaussian process, & adding white noise & autoregressive
 effects.
@@ -115,6 +115,6 @@ plt.savefig(save_path)
 df = pd.DataFrame(index=date_range, data=time_series, columns=['values'])
 
 # save df using mlem
-output_path = f"{expanduser('~')}/projects/devops_demo/data/raw/product_sales_data.csv"
+output_path = f"{expanduser('~')}/projects/devops_demo/data/raw/ts_data.csv"
 save(df, output_path)
 print(f"\nSaved time series data to path {output_path}")

@@ -1,9 +1,9 @@
 artifacts:
   data:
-    hash: 336681c754aba1673807ce62bd635538
-    size: 5240
+    hash: 9f85e2675d43965d64dd4037fa64e1f5
+    size: 5233
     type: dvc
-    uri: product_sales_data.csv
+    uri: ts_data.csv
 object_type: data
 reader:
   data_type:

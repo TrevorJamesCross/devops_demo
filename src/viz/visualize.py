@@ -1,7 +1,7 @@
 """
 DevOps Demo: Visualize Data
 Author: Trevor Cross
-Last Updated: 12/30/23
+Last Updated: 01/02/24
 
 Visualize and explore raw data to aid in decision making.
 """
@@ -30,51 +30,32 @@ rs = 81
 # -----------------------
 
 # define data path
-data_path = f"{expanduser('~')}/projects/devops_demo/data/raw/product_sales_data.csv"
+data_path = f"{expanduser('~')}/projects/devops_demo/data/raw/ts_data.csv"
 
 # pull data from path
-df = pd.read_csv(data_path)
-
-# generate train/test splits by product id
-splits_gen = split_by_cat_generator(df, 'prod_id', test_size=0.2, shuffle=False, rs=rs)
+df = pd.read_csv(data_path, index_col=0)
 
 # ------------------------------
 # ---Plot Example Time Series---
 # ------------------------------
 
-# iterate examples
-for exam_num in range(3):
+# plot timeseries
+base_path = f"{expanduser('~')}/projects/devops_demo/reports/figures/"
+save_path = base_path + f"timeseries.png"
 
-    # get example time series split & plotting info
-    trn_df, tst_df = next(splits_gen)
-    prod_id = trn_df['prod_id'].iloc[0]
+plot_differenced_ts(df,
+                    save_path=save_path,
+                    differencing_param=1,
+                    )
 
-    # transform dfs
-    trn_df.index = trn_df['sale_date']
-    trn_df = trn_df['units_sold']
+# ---------------------
+# ---Plot ACF & PACF---
+# ---------------------
 
-    tst_df.index = tst_df['sale_date']
-    tst_df = tst_df['units_sold']
-
-    final_df = pd.concat([trn_df, tst_df], ignore_index=False)
-
-    # plot timeseries
-    base_path = f"{expanduser('~')}/projects/devops_demo/reports/figures/"
-    save_path = base_path + f"example_ts_{exam_num}.png"
-
-    plot_differenced_ts(final_df,
-                        save_path=save_path,
-                        differencing_param=1,
-                        title=prod_id)
-
-    # ---------------------
-    # ---Plot ACF & PACF---
-    # ---------------------
-
-    # plot ACF & PACF
-    save_path = base_path + f"example_acf_{exam_num}.png"
-    plot_acf(final_df,
-             save_path=save_path,
-             differencing_param=1,
-             title=prod_id,
-             num_xticks=25)
+# plot ACF & PACF
+save_path = base_path + f"autocorrelation.png"
+plot_acf(df,
+         save_path=save_path,
+         differencing_param=1,
+         num_xticks=25
+         )

@@ -1,9 +1,9 @@
 """
 DevOps Demo: Train Models
 Author: Trevor Cross
-Last Updated: 12/30/23
+Last Updated: 01/02/24
 
-Train multiple ARIMA models on example product ids using statsmodels libraries.
+Train multiple ARIMA models using statsmodels libraries.
 """
 
 # ----------------------
@@ -37,7 +37,8 @@ data_path = f"{expanduser('~')}/projects/devops_demo/data/raw/product_sales_data
 
 # pull data from path
 df = pd.read_csv(data_path)
-
+print(df)
+raise
 # generate train/test splits by product id
 splits_gen = split_by_cat_generator(df, 'prod_id', test_size=0.2, shuffle=False, rs=rs)
 
