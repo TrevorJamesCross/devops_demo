@@ -1,15 +1,15 @@
 """
 DevOps Demo: Synthesize Data
 Author: Trevor Cross
-Last Updated: 01/02/24
+Last Updated: 01/05/24
 
 Create time series data using a gaussian process, & adding white noise & autoregressive
 effects.
 """
 
-#%% ----------------------
-#-- ---Import Libraries---
-#-- ----------------------
+# ----------------------
+# ---Import Libraries---
+# ----------------------
 
 # import standard libraries
 import numpy as np
@@ -37,9 +37,9 @@ from os.path import expanduser
 rs = 81
 rand.seed(rs)
 
-#-- -----------------------------
-#-- ---Create Gaussian Process---
-#-- -----------------------------
+# -----------------------------
+# ---Create Gaussian Process---
+# -----------------------------
 
 # define function to represent target values for Gaussian Process
 def target_func(X):
@@ -47,7 +47,7 @@ def target_func(X):
     return func.flatten()
 
 # define data & obtain function values
-num_days = 180
+num_days = 365*5
 rng = np.random.default_rng()
 gp_data = np.sort(rng.choice(num_days, size=num_days//3, replace=False))
 gp_target = target_func(gp_data)
@@ -59,9 +59,9 @@ gp_kernel = Matern()
 gpr = GaussianProcessRegressor(kernel=gp_kernel)
 gpr.fit(gp_data.reshape(-1, 1), gp_target.reshape(-1, 1))
 
-#-- ---------------------------------------
-#-- ---Define Dates & Obtain Predictions---
-#-- ---------------------------------------
+# ---------------------------------------
+# ---Define Dates & Obtain Predictions---
+# ---------------------------------------
 
 # define range of dates
 date_delta = datetime.timedelta(days=num_days)
@@ -74,34 +74,35 @@ date_range = [date_start + step_num*step_len for step_num in range(date_delta.da
 # obtain predictions from gaussian process model
 mean_targets = gpr.predict(np.arange(0, num_days, step=1).reshape(-1, 1), return_std=False)
 
-#-- -----------------
-#-- ---Apply Noise---
-#-- -----------------
+# -----------------
+# ---Apply Noise---
+# -----------------
 
 # define white noise
 white_noise = 0.5*np.random.normal(size=num_days)
 
 # define red (autoregressive) noise
-ar_model = AutoReg(white_noise, lags=3)
+num_lags = 5
+ar_model = AutoReg(white_noise, lags=num_lags)
 ar_result = ar_model.fit()
 red_noise = ar_result.predict()
 
 # prepend zeros to red_noise
-np.put(red_noise, range(3), [0]*3)
+np.put(red_noise, range(num_lags), [0]*num_lags)
 
 # apply noise to mean targets
 time_series = mean_targets + white_noise + red_noise
 
-#-- ------------------------
-#-- ---Plot & Export Data---
-#-- ------------------------
+# ------------------------
+# ---Plot & Export Data---
+# ------------------------
 
 # plot data
-plt.figure()
+plt.figure(figsize=(20,14))
 plt.style.use('bmh')
-plt.plot([date_range[ind] for ind in gp_data], gp_target, label="Original")
-plt.plot(date_range, mean_targets, label="GP Predicted")
-plt.plot(date_range, time_series, label="Fully Synthesized")
+plt.plot(date_range, time_series, label="Fully Synthesized", c='k', linestyle='-')
+plt.plot(date_range, mean_targets, label="GP Predicted", c='b', linestyle='--')
+plt.plot([date_range[ind] for ind in gp_data], gp_target, c='r', label="Original", linestyle=':')
 plt.title("Synthesized Time Series")
 plt.xlabel("Date")
 plt.ylabel("Value")

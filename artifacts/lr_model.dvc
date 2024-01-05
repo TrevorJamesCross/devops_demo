@@ -1,0 +1,5 @@
+outs:
+- md5: dcfe2f47b781c7d2717022732792e910
+  size: 579
+  hash: md5
+  path: lr_model

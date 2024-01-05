@@ -1,7 +1,7 @@
 """
 DevOps Demo: Toolbox
 Author: Trevor Cross
-Last Updated: 12/28/23
+Last Updated: 01/04/23
 
 Series of functions used to assist in project development
 """
@@ -20,10 +20,13 @@ import matplotlib.pyplot as plt
 # import statistics libraries
 import statsmodels.api as sm
 
-# import scikit-learn functions
+# import scikit-learn libraries
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (mean_squared_error, mean_absolute_error,
                              mean_absolute_percentage_error)
+
+# import support libraries
+import json
 
 # -------------------------------------
 # ---Define Data Wrangling Functions---
@@ -51,7 +54,7 @@ def plot_differenced_ts(series, save_path=None, differencing_param=1, title="Tim
     # plot timeseries
     axes[0].plot(series.index, series.values)
     axes[0].set(title=title,
-                ylabel="Units Sold",
+                ylabel="Value",
                 xticks = series.index[range(0, len(series), len(series)//num_xticks)]
                 )
 
@@ -106,34 +109,51 @@ def plot_acf(series, save_path=None, differencing_param=1, title=None, num_xtick
         plt.show()
 
 # define function to plot timeseries forecast
-def plot_forecast(orig_ts, test_ts, forecast_obj, title="Forecast", save_path=None, num_xticks=10):
+def plot_forecast_cv(ts, true_ts_list, predicted_ts_list, title="CV Forecasts", save_path=None, num_xticks=10):
 
     # set style params
     plt.style.use('bmh')
 
     # define figure
-    plt.figure()
-    plt.title(title)
+    plt.figure(figsize=(20, 14))
 
     # plot original timeseries
-    plt.plot(orig_ts.index, orig_ts.values, label="Original Time Series")
+    ts.index = pd.to_datetime(ts.index)
+    plt.plot(ts.index, ts.values, label="Original Time Series", color='k')
 
-    # plot test timeseries
-    plt.plot(test_ts.index, test_ts.values, label="Test Time Series")
+    # iterate lists
+    for ts_num, packed_ts in enumerate(zip(true_ts_list, predicted_ts_list)):
 
-    # plot forecasts
-    plt.plot(test_ts.index, forecast_obj.predicted_mean.values, label="Forecast")
+        # unpack time series
+        true_ts = packed_ts[0]
+        predicted_ts = packed_ts[1]
 
-    # plot confidence intervals
-    conf_ints = forecast_obj.conf_int(alpha=0.05)
-    plt.fill_between(test_ts.index, conf_ints.iloc[:, 0], conf_ints.iloc[:, 1], alpha=0.2, label='Confidence Intervals')
+        # convert dates
+        true_ts.index = pd.to_datetime(true_ts.index)
+        predicted_ts.index = pd.to_datetime(predicted_ts.index)
+
+        # plot true timeseries
+        plt.plot(true_ts.index,
+                 true_ts.values,
+                 label="True Time Series" if ts_num == 0 else "_nolegend_",
+                 marker='o' if len(true_ts) == 1 else None,
+                 color='b'
+                 )
+
+        # plot predicted timeseries
+        plt.plot(predicted_ts.index,
+                 predicted_ts.values,
+                 label="Forecast" if ts_num == 0 else "_nolegend_",
+                 marker='o' if len(predicted_ts) == 1 else None,
+                 color='r')
+
+    # specify xticks
+    xticks = list(ts.index[range(0, len(ts), len(ts)//num_xticks)])
+    xticks.append(ts.index[-1])
 
     # prettify
     plt.title(title)
-
-    ts = pd.concat([orig_ts, test_ts], ignore_index=False)
-    plt.xticks(ts.index[range(0, len(ts), len(ts)//num_xticks)])
-
+    plt.xticks(xticks, rotation=20)
     plt.legend()
 
     # save plot
@@ -144,8 +164,8 @@ def plot_forecast(orig_ts, test_ts, forecast_obj, title="Forecast", save_path=No
         plt.show()
 
 # ---------------------------------------
-#---Define Model Evaluation Functions---
-#---------------------------------------
+# ---Define Model Evaluation Functions---
+# ---------------------------------------
 
 # define function to evaluate model across different metrics
 def eval_metrics(true_values, predicted_values):
@@ -154,3 +174,12 @@ def eval_metrics(true_values, predicted_values):
             'MAE':mean_absolute_error(true_values, predicted_values),
             'MAPE': mean_absolute_percentage_error(true_values, predicted_values)
             }
+
+# ------------------------------
+# ---Define Support Functions---
+# ------------------------------
+
+# define function to save dictionary as JSON file
+def dict_to_json(my_dict, file_path):
+    with open(file_path, "w+") as file:
+        json.dump(my_dict, file, indent=4)

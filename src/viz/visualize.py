@@ -1,7 +1,7 @@
 """
 DevOps Demo: Visualize Data
 Author: Trevor Cross
-Last Updated: 01/02/24
+Last Updated: 01/05/24
 
 Visualize and explore raw data to aid in decision making.
 """
@@ -12,7 +12,6 @@ Visualize and explore raw data to aid in decision making.
 
 # import standard libraries
 import pandas as pd
-import numpy as np
 
 # import support libraries
 import sys
@@ -30,21 +29,30 @@ rs = 81
 # -----------------------
 
 # define data path
-data_path = f"{expanduser('~')}/projects/devops_demo/data/raw/ts_data.csv"
+base_path = f"{expanduser('~')}/projects/devops_demo/data"
 
 # pull data from path
-df = pd.read_csv(data_path, index_col=0)
+df_daily = pd.read_csv(base_path+'/raw/ts_data.csv', parse_dates=[0], index_col=0)
+df_monthly = pd.read_csv(base_path+'/preprocessed/ts_data_monthly.csv', parse_dates=[0], index_col=0)
 
-# ------------------------------
-# ---Plot Example Time Series---
-# ------------------------------
+# drop lagged values from df_monthly
+df_monthly.drop(columns=['lagged_values'], inplace=True)
+
+# ----------------------------------
+# ---Plot Differenced Time Series---
+# ----------------------------------
+
+# define base save path for figures
+base_path = f"{expanduser('~')}/projects/devops_demo/reports/figures"
 
 # plot timeseries
-base_path = f"{expanduser('~')}/projects/devops_demo/reports/figures/"
-save_path = base_path + f"timeseries.png"
+plot_differenced_ts(df_daily,
+                    save_path=base_path+'/daily_timeseries.png',
+                    differencing_param=1,
+                    )
 
-plot_differenced_ts(df,
-                    save_path=save_path,
+plot_differenced_ts(df_monthly,
+                    save_path=base_path+'/monthly_timeseries.png',
                     differencing_param=1,
                     )
 
@@ -53,9 +61,14 @@ plot_differenced_ts(df,
 # ---------------------
 
 # plot ACF & PACF
-save_path = base_path + f"autocorrelation.png"
-plot_acf(df,
-         save_path=save_path,
+plot_acf(df_daily,
+         save_path=base_path+'/daily_acf.png',
+         differencing_param=1,
+         num_xticks=25
+         )
+
+plot_acf(df_monthly,
+         save_path=base_path+'/monthly_acf.png',
          differencing_param=1,
          num_xticks=25
          )
