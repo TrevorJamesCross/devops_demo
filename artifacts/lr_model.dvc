@@ -3,3 +3,7 @@ outs:
   size: 579
   hash: md5
   path: lr_model
+  cloud:
+    gcp_bucket:
+      etag: 08c3fbaeb0d7c683031001
+      version_id: '1704472636800451'

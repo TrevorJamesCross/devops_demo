@@ -3,3 +3,7 @@ outs:
   size: 2726
   hash: md5
   path: ts_data_monthly.csv
+  cloud:
+    gcp_bucket:
+      etag: 088ffcb8b0d7c683031001
+      version_id: '1704472636964367'
