@@ -1,5 +1,5 @@
 """
-DevOps Demo: Train Models
+DevOps Demo: Train Model
 Author: Trevor Cross
 Last Updated: 01/05/24
 
