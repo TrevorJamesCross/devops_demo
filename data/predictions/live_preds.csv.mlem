@@ -1,0 +1,23 @@
+artifacts:
+  data:
+    hash: e51c354a79c72b66de53f3dd1658276f
+    size: 42
+    type: dvc
+    uri: live_preds.csv
+object_type: data
+reader:
+  data_type:
+    columns:
+    - ''
+    - prediction
+    dtypes:
+    - datetime64[ns]
+    - float64
+    index_cols:
+    - ''
+    type: dataframe
+  format: csv
+  type: pandas
+requirements:
+- module: pandas
+  version: 2.1.4

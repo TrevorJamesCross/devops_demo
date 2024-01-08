@@ -15,7 +15,7 @@ import pandas as pd
 import numpy as np
 
 # import iterative.ai libraries
-from mlem.api import load
+from mlem.api import save, load
 
 # import support libraries
 import sys
@@ -44,25 +44,38 @@ last_row  = pd.read_csv(base_path+'/preprocessed/ts_data_monthly.csv', parse_dat
 # obtain model inputs
 prev_date = last_row.name
 
-month = prev_date.month
-year = prev_date.year
+month = int(prev_date.month) + 1
+year = int(prev_date.year)
+if month == 13:
+    month = 1
+    year += 1
 
 lagged_value = last_row['values']
 
 # create input data
-model_input = pd.DataFrame(data=[[lagged_value, month, year]], columns=['lagged_values', 'month', 'year'], index=[prev_date])
+model_input = pd.DataFrame(data=[[lagged_value, month, year]], columns=['lagged_values', 'month', 'year'])
 
 # ----------------------------------
 # ---Make Prediction & Append CSV---
 # ----------------------------------
 
 # predict using pulled model & convert prediction to string
-pred = str(model.predict(model_input)[0][0])
+pred = model.predict(model_input)[0][0]
 
 # convert date to string
-prev_date = str(prev_date.year) + '-' + str(prev_date.month)
+date = str(year) + '-' + str(month)
 
-# append to CSV
-with open(base_path+'/predictions/live_preds.csv', 'a') as preds_file:
-    preds_file.write(f"{prev_date},{pred}")
-print(f"\nAppended data '{prev_date},{pred}' to CSV path {base_path+'/predictions/live_preds.csv'}")
+# read live predictions CSV
+live_df = pd.read_csv(base_path+'/predictions/live_preds.csv', parse_dates=[0], index_col=0)
+
+# replace current prediction, or append if no matching index
+try:
+    live_df.loc[date, 'prediction'] = pred
+    print(f"\nReplaced index {date} with new prediction within CSV path {base_path+'/predictions/live_preds.csv'}")
+except KeyError:
+    new_row = pd.DataFrame(data={'prediction': pred}, index=[date])
+    live_df = pd.concat([live_df, new_row], axis=0)
+    print(f"\nAppended index {date} to CSV path {base_path+'/predictions/live_preds.csv'}")
+
+# export live_df
+save(live_df, base_path+'/predictions/live_preds.csv')
