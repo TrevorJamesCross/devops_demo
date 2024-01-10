@@ -1,0 +1,25 @@
+stages:
+  preprocess:
+    cmd: python src/data/preproc_data.py
+    deps:
+    - data/raw/ts_data.csv
+    - src/data/preproc_data.py
+    outs:
+    - data/preprocessed/ts_data_monthly.csv
+    - data/preprocessed/ts_data_monthly.csv.mlem:
+        cache: false # track with Git; not dvc
+  visualize:
+    cmd: python src/viz/visualize.py
+    deps:
+    - data/raw/ts_data.csv
+    - data/preprocessed/ts_data_monthly.csv
+    - src/viz/visualize.py
+    outs:
+    - reports/figures/daily_timeseries.png:
+        cache: false # track using Git; not dvc
+    - reports/figures/monthly_timeseries.png:
+        cache: false # track using Git; not dvc
+    - reports/figures/daily_acf.png:
+        cache: false # track using Git; not dvc
+    - reports/figures/monthly_acf.png:
+        cache: false # track using Git; not dvc

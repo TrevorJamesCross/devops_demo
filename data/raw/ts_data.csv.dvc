@@ -3,3 +3,7 @@ outs:
   size: 54216
   hash: md5
   path: ts_data.csv
+  cloud:
+    gcp_bucket:
+      etag: 08e1d1acd384d383031001
+      version_id: '1704897106618593'

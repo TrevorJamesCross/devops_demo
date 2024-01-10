@@ -1,0 +1,58 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/data/preproc_data.py
+    deps:
+    - path: data/raw/ts_data.csv
+      hash: md5
+      md5: f81119c62ae1fdd909752fded3a6b563
+      size: 54216
+    - path: src/data/preproc_data.py
+      hash: md5
+      md5: 2f2472c3a1cf0511f1e08a629d20a390
+      size: 1437
+    outs:
+    - path: data/preprocessed/ts_data_monthly.csv
+      hash: md5
+      md5: eef5b575030db92da9c136e7ac733886
+      size: 2726
+      cloud:
+        gcp_bucket:
+          etag: 088ffcb8b0d7c683031001
+          version_id: '1704472636964367'
+    - path: data/preprocessed/ts_data_monthly.csv.mlem
+      hash: md5
+      md5: 6809a4a109a7d144692a616ab7ebb408
+      size: 389
+  visualize:
+    cmd: python src/viz/visualize.py
+    deps:
+    - path: data/preprocessed/ts_data_monthly.csv
+      hash: md5
+      md5: eef5b575030db92da9c136e7ac733886
+      size: 2726
+    - path: data/raw/ts_data.csv
+      hash: md5
+      md5: f81119c62ae1fdd909752fded3a6b563
+      size: 54216
+    - path: src/viz/visualize.py
+      hash: md5
+      md5: 78b20fda4f4b3c756a318be537a0ebb1
+      size: 1849
+    outs:
+    - path: reports/figures/daily_acf.png
+      hash: md5
+      md5: 293e77f673cf75e65cedfd8c64f448e4
+      size: 72332
+    - path: reports/figures/daily_timeseries.png
+      hash: md5
+      md5: 0f03ad3141c03bfc800d61fc1ad83a37
+      size: 306787
+    - path: reports/figures/monthly_acf.png
+      hash: md5
+      md5: d825bd9f1b6cffe145798a073dd818da
+      size: 76879
+    - path: reports/figures/monthly_timeseries.png
+      hash: md5
+      md5: 111ec26440b91012ace6297ae87c4696
+      size: 177132
