@@ -1,3 +1,9 @@
+artifacts:
+  linreg:
+    path: models/lr_model
+    type: model
+    meta:
+      framework: sklearn
 stages:
   preprocess:
     cmd: python src/data/preproc_data.py
@@ -23,3 +29,21 @@ stages:
         cache: false # track using Git; not dvc
     - reports/figures/monthly_acf.png:
         cache: false # track using Git; not dvc
+  train_model:
+    cmd: python src/models/train_model.py
+    deps:
+    - data/preprocessed/ts_data_monthly.csv
+    - src/models/train_model.py
+    outs:
+    - reports/figures/validation_forecasts.png:
+        cache: false # track using Git; not dvc
+    - models/lr_model
+    - models/metrics.json:
+        cache: false # track using Git; not dvc
+metrics:
+- models/metrics.json
+plots:
+- reports/figures/daily_timeseries.png
+- reports/figures/monthly_timeseries.png
+- reports/figures/daily_acf.png
+- reports/figures/monthly_acf.png

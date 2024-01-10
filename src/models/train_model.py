@@ -119,7 +119,7 @@ model = LinearRegression()
 model.fit(df, target_values)
 
 # define save path
-base_path = f"{expanduser('~')}/projects/devops_demo/artifacts"
+base_path = f"{expanduser('~')}/projects/devops_demo/models"
 
 # save model using MLEM
 model_save_path = base_path+'/lr_model'

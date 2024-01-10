@@ -1,7 +1,7 @@
 """
 DevOps Demo: Make Prediction
 Author: Trevor Cross
-Last Updated: 01/08/24
+Last Updated: 01/10/24
 
 Pull model, make next step prediction, and append prediction to local CSV.
 """
@@ -19,7 +19,7 @@ from mlem.api import save, load
 
 # import support libraries
 import sys
-from os.path import expanduser
+from os.path import expanduser, exists
 
 # import toolbox
 sys.path.append(f"{expanduser('~')}/projects/devops_demo/src")
@@ -66,14 +66,20 @@ pred = model.predict(model_input)[0][0]
 date = str(year) + '-' + str(month)
 
 # read live predictions CSV
-live_df = pd.read_csv(base_path+'/predictions/live_preds.csv', parse_dates=[0], index_col=0)
+if exists(base_path+'/predictions/live_preds.csv'):
+    live_df = pd.read_csv(base_path+'/predictions/live_preds.csv', parse_dates=[0], index_col=0)
+else:
+    print(f"\nCreating new file path {base_path+'/predictions/live_preds.csv'}")
+    with open(base_path+'/predictions/live_preds.csv', 'w') as file:
+        file.write(",predictions")
+    live_df = pd.read_csv(base_path+'/predictions/live_preds.csv', parse_dates=[0], index_col=0)
 
 # replace current prediction, or append if no matching index
 try:
-    live_df.loc[date, 'prediction'] = pred
+    live_df.loc[date, 'predictions'] = pred
     print(f"\nReplaced index {date} with new prediction within CSV path {base_path+'/predictions/live_preds.csv'}")
 except KeyError:
-    new_row = pd.DataFrame(data={'prediction': pred}, index=[date])
+    new_row = pd.DataFrame(data={'predictions': pred}, index=[date])
     live_df = pd.concat([live_df, new_row], axis=0)
     print(f"\nAppended index {date} to CSV path {base_path+'/predictions/live_preds.csv'}")
 
