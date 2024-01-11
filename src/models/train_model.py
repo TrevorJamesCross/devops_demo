@@ -1,7 +1,7 @@
 """
 DevOps Demo: Train Model
 Author: Trevor Cross
-Last Updated: 01/05/24
+Last Updated: 01/11/24
 
 Train & evaluate linear regression model on preprocessed (aggregated w/ lag) data.
 """
@@ -24,13 +24,24 @@ from mlem.api import save
 # import support libraries
 import sys
 from os.path import expanduser
+import yaml
 
 # import toolbox
 sys.path.append(f"{expanduser('~')}/projects/devops_demo/src")
 from toolbox import *
 
-# define random state
-rs = 81
+# --------------------------
+# ---Read Parameters File---
+# --------------------------
+
+# read parameters file
+params = yaml.safe_load(open("params.yaml"))["train_model"]
+
+# obtain parameters
+num_splits = params["num_splits"]
+forecast_size = params["forecast_size"]
+fit_int = params["model_fit_intercept"]
+force_positive = params["model_force_positive_coeffs"]
 
 # -------------------------------
 # ---Pull Data & Define Splits---
@@ -53,8 +64,7 @@ df['year'] = df.index.year
 target_values = pd.DataFrame(df.pop('values'))
 
 # define timeseries splits
-forecast_size = 1
-tscv = TimeSeriesSplit(n_splits=20, test_size=forecast_size)
+tscv = TimeSeriesSplit(n_splits=num_splits, test_size=forecast_size)
 
 # ----------------------------
 # ---Train & Evaluate Model---
@@ -79,7 +89,9 @@ for trn_ind, tst_ind in tscv.split(df):
     tst_targets = target_values.iloc[tst_ind]
 
     # define & fit model
-    model = LinearRegression()
+    model = LinearRegression(fit_intercept=fit_int,
+                             positive=force_positive
+                             )
     model.fit(trn_features, trn_targets)
 
     # predict test values

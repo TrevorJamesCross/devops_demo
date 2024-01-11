@@ -10,6 +10,8 @@ stages:
     deps:
     - data/raw/ts_data.csv
     - src/data/preproc_data.py
+    params:
+    - preprocess.num_lagged_features
     outs:
     - data/preprocessed/ts_data_monthly.csv
     - data/preprocessed/ts_data_monthly.csv.mlem:
@@ -20,6 +22,9 @@ stages:
     - data/raw/ts_data.csv
     - data/preprocessed/ts_data_monthly.csv
     - src/viz/visualize.py
+    params:
+    - visualize.differencing_param
+    - visualize.num_lags_to_plot
     outs:
     - reports/figures/daily_timeseries.png:
         cache: false # track using Git; not dvc
@@ -34,6 +39,11 @@ stages:
     deps:
     - data/preprocessed/ts_data_monthly.csv
     - src/models/train_model.py
+    params:
+    - train_model.num_splits
+    - train_model.forecast_size
+    - train_model.model_fit_intercept
+    - train_model.model_force_positive_coeffs
     outs:
     - reports/figures/validation_forecasts.png:
         cache: false # track using Git; not dvc

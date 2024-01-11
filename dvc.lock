@@ -9,36 +9,43 @@ stages:
       size: 54216
     - path: src/data/preproc_data.py
       hash: md5
-      md5: 2f2472c3a1cf0511f1e08a629d20a390
-      size: 1437
+      md5: 1c781a89916936feaaea27802685eb8b
+      size: 1783
+    params:
+      params.yaml:
+        preprocess.num_lagged_features: 1
     outs:
     - path: data/preprocessed/ts_data_monthly.csv
       hash: md5
-      md5: eef5b575030db92da9c136e7ac733886
-      size: 2726
+      md5: 0786baa569854384236a19e19a7c67cf
+      size: 2728
       cloud:
         gcp_bucket:
-          etag: 088ffcb8b0d7c683031001
-          version_id: '1704472636964367'
+          etag: 089acee487cbd583031001
+          version_id: '1704984726546202'
     - path: data/preprocessed/ts_data_monthly.csv.mlem
       hash: md5
-      md5: 6809a4a109a7d144692a616ab7ebb408
-      size: 389
+      md5: 2a5e44504a906e9ea1a3daaffa75aac7
+      size: 391
   visualize:
     cmd: python src/viz/visualize.py
     deps:
     - path: data/preprocessed/ts_data_monthly.csv
       hash: md5
-      md5: eef5b575030db92da9c136e7ac733886
-      size: 2726
+      md5: 0786baa569854384236a19e19a7c67cf
+      size: 2728
     - path: data/raw/ts_data.csv
       hash: md5
       md5: f81119c62ae1fdd909752fded3a6b563
       size: 54216
     - path: src/viz/visualize.py
       hash: md5
-      md5: 78b20fda4f4b3c756a318be537a0ebb1
-      size: 1849
+      md5: 0d0dc3078e68c9631533dc2c6668f924
+      size: 2177
+    params:
+      params.yaml:
+        visualize.differencing_param: 1
+        visualize.num_lags_to_plot: 25
     outs:
     - path: reports/figures/daily_acf.png
       hash: md5
@@ -61,22 +68,32 @@ stages:
     deps:
     - path: data/preprocessed/ts_data_monthly.csv
       hash: md5
-      md5: eef5b575030db92da9c136e7ac733886
-      size: 2726
+      md5: 0786baa569854384236a19e19a7c67cf
+      size: 2728
     - path: src/models/train_model.py
       hash: md5
-      md5: bbc18b7f29d881ef936384977790412c
-      size: 3404
+      md5: b7aa38e76a07dc6372dc887b92e818ff
+      size: 3842
+    params:
+      params.yaml:
+        train_model.forecast_size: 1
+        train_model.model_fit_intercept: true
+        train_model.model_force_positive_coeffs: false
+        train_model.num_splits: 10
     outs:
     - path: models/lr_model
       hash: md5
-      md5: dcfe2f47b781c7d2717022732792e910
-      size: 579
+      md5: 483782e62a9ebabc1e14a08d072e22d7
+      size: 581
+      cloud:
+        gcp_bucket:
+          etag: 08d7afd687cbd583031001
+          version_id: '1704984726312919'
     - path: models/metrics.json
       hash: md5
-      md5: 703aa85d95bf1e74ace67a24bb79a868
-      size: 129
+      md5: a5d940bfb0e8b8df63c2625680f850ac
+      size: 128
     - path: reports/figures/validation_forecasts.png
       hash: md5
-      md5: d272f511c77645d7637f4bf41aef6ee8
-      size: 129541
+      md5: 4b2bdccfc51ab3313f6c84457ed13097
+      size: 128552

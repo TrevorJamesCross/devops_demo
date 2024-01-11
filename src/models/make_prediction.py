@@ -29,17 +29,17 @@ from toolbox import *
 # ---Pull Model & Obtain Model Inputs---
 # --------------------------------------
 
-# define model path
-model_path = f"{expanduser('~')}/projects/devops_demo/artifacts/lr_model"
+# define models dir path
+models_path = f"{expanduser('~')}/projects/devops_demo/models"
 
 # pull model
-model = load(model_path)
+model = load(models_path+'/lr_model')
 
 # define base data path
-base_path = f"{expanduser('~')}/projects/devops_demo/data"
+data_path = f"{expanduser('~')}/projects/devops_demo/data"
 
 # pull last row of processed data
-last_row  = pd.read_csv(base_path+'/preprocessed/ts_data_monthly.csv', parse_dates=[0], index_col=0).iloc[-1]
+last_row  = pd.read_csv(data_path+'/preprocessed/ts_data_monthly.csv', parse_dates=[0], index_col=0).iloc[-1]
 
 # obtain model inputs
 prev_date = last_row.name
@@ -65,23 +65,23 @@ pred = model.predict(model_input)[0][0]
 # convert date to string
 date = str(year) + '-' + str(month)
 
-# read live predictions CSV
-if exists(base_path+'/predictions/live_preds.csv'):
-    live_df = pd.read_csv(base_path+'/predictions/live_preds.csv', parse_dates=[0], index_col=0)
+# read live predictions CSV, or create one if not exists
+if exists(models_path+'/live_preds.csv'):
+    live_df = pd.read_csv(models_path+'/live_preds.csv', parse_dates=[0], index_col=0)
 else:
-    print(f"\nCreating new file path {base_path+'/predictions/live_preds.csv'}")
-    with open(base_path+'/predictions/live_preds.csv', 'w') as file:
+    print(f"\nCreating new file path {models_path+'/live_preds.csv'}")
+    with open(models_path+'/live_preds.csv', 'w') as file:
         file.write(",predictions")
-    live_df = pd.read_csv(base_path+'/predictions/live_preds.csv', parse_dates=[0], index_col=0)
+    live_df = pd.read_csv(models_path+'/live_preds.csv', parse_dates=[0], index_col=0)
 
 # replace current prediction, or append if no matching index
 try:
     live_df.loc[date, 'predictions'] = pred
-    print(f"\nReplaced index {date} with new prediction within CSV path {base_path+'/predictions/live_preds.csv'}")
+    print(f"\nReplaced index {date} with new prediction within CSV path {models_path+'/live_preds.csv'}")
 except KeyError:
     new_row = pd.DataFrame(data={'predictions': pred}, index=[date])
     live_df = pd.concat([live_df, new_row], axis=0)
-    print(f"\nAppended index {date} to CSV path {base_path+'/predictions/live_preds.csv'}")
+    print(f"\nAppended index {date} to CSV path {models_path+'/live_preds.csv'}")
 
 # export live_df
-save(live_df, base_path+'/predictions/live_preds.csv')
+save(live_df, models_path+'/live_preds.csv')

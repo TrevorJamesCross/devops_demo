@@ -1,9 +1,10 @@
 """
 DevOps Demo: Preprocess Data
 Author: Trevor Cross
-Last Updated: 01/05/24
+Last Updated: 01/11/24
 
-Preprocess raw (synthesized) data by aggregating it to the monthly level.
+Preprocess raw (synthesized) data by aggregating it to the monthly level & appending
+lagged values.
 """
 
 # ----------------------
@@ -18,6 +19,17 @@ from mlem.api import save
 
 # import support libraries
 from os.path import expanduser
+import yaml
+
+# --------------------------
+# ---Read Parameters File---
+# --------------------------
+
+# read parameters file
+params = yaml.safe_load(open("params.yaml"))["preprocess"]
+
+# obtain parameters
+num_lagged_feats = params["num_lagged_features"]
 
 # --------------------
 # ---Pull Raw Data---
@@ -39,8 +51,9 @@ df['year'] = df.index.year
 df_monthly_agg = df.groupby(['year', 'month']).mean()
 df_monthly_agg.index = df_monthly_agg.index.get_level_values('year').astype(str) + '-' + df_monthly_agg.index.get_level_values('month').astype(str)
 
-# append lagged value column
-df_monthly_agg['lagged_values'] = df_monthly_agg['values'].shift(1)
+# append lagged values columns
+for lag_num in range(num_lagged_feats):
+    df_monthly_agg[f"lagged_values_{lag_num+1}"] = df_monthly_agg['values'].shift(lag_num+1)
 
 # ------------------------------
 # ---Export Preprocessed Data---

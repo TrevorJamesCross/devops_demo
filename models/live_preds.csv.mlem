@@ -1,7 +1,7 @@
 artifacts:
   data:
-    hash: e51c354a79c72b66de53f3dd1658276f
-    size: 42
+    hash: f952962d73172697e869b521f12ddaf8
+    size: 39
     type: dvc
     uri: live_preds.csv
 object_type: data
@@ -9,10 +9,10 @@ reader:
   data_type:
     columns:
     - ''
-    - prediction
+    - predictions
     dtypes:
-    - datetime64[ns]
-    - float64
+    - object
+    - object
     index_cols:
     - ''
     type: dataframe

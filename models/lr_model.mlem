@@ -1,7 +1,7 @@
 artifacts:
   data:
-    hash: dcfe2f47b781c7d2717022732792e910
-    size: 579
+    hash: 483782e62a9ebabc1e14a08d072e22d7
+    size: 581
     type: dvc
     uri: lr_model
 call_orders:
@@ -18,7 +18,7 @@ processors:
           type_:
             columns:
             - ''
-            - lagged_values
+            - lagged_values_1
             - month
             - year
             dtypes:
