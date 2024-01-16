@@ -15,11 +15,11 @@ jobs:
 
       - uses: iterative/setup-dvc@v1
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: cml
+      - name: Write cml Report
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
@@ -29,7 +29,7 @@ jobs:
           pip install -r requirements.txt
 
           # pull data & model with dvc
-          dvc pull
+          dvc pull --run-cache
 
           # reproduce pipeline
           dvc repro
