@@ -3,7 +3,7 @@ preprocess:
 
 visualize:
     differencing_param: 1
-    num_lags_to_plot: 25
+    num_lags_to_plot: 20
 
 train_model:
     num_splits: 20
