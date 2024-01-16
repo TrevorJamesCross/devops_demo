@@ -1,5 +1,5 @@
 preprocess:
-    num_lagged_features: 1
+    num_lagged_features: 2
 
 visualize:
     differencing_param: 1

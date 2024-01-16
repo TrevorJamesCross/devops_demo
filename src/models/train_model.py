@@ -23,11 +23,11 @@ from mlem.api import save
 
 # import support libraries
 import sys
-from os.path import expanduser
+import os
 import yaml
 
 # import toolbox
-sys.path.append(f"{expanduser('~')}/projects/devops_demo/src")
+sys.path.append("src")
 from toolbox import *
 
 # --------------------------
@@ -48,12 +48,12 @@ force_positive = params["model_force_positive_coeffs"]
 # -------------------------------
 
 # define data path
-data_path = f"{expanduser('~')}/projects/devops_demo/data/preprocessed/ts_data_monthly.csv"
+data_path = os.path.join('data', 'preprocessed', 'ts_data_monthly.csv')
 
 # pull data from path
 df = pd.read_csv(data_path, parse_dates=[0], index_col=0)
 
-# remove rows with nan
+# remove rows with nan (removes rows with null lag values)
 df.dropna(inplace=True)
 
 # create cols for month & year
@@ -117,7 +117,7 @@ for key in key_metrics:
 # -----------------------------------
 
 # define save path
-save_path = f"{expanduser('~')}/projects/devops_demo/reports/figures/validation_forecasts.png"
+save_path = os.path.join('reports', 'figures', 'validation_forecasts.png')
 
 # plot forecasts
 plot_forecast_cv(target_values, true_vals, pred_vals, save_path=save_path)
@@ -127,18 +127,17 @@ plot_forecast_cv(target_values, true_vals, pred_vals, save_path=save_path)
 # --------------------------
 
 # refit model on all data
-model = LinearRegression()
+model = LinearRegression(fit_intercept=fit_int,
+                         positive=force_positive
+                         )
 model.fit(df, target_values)
 
-# define save path
-base_path = f"{expanduser('~')}/projects/devops_demo/models"
-
 # save model using MLEM
-model_save_path = base_path+'/lr_model'
+model_save_path = 'models/lr_model'
 save(model, model_save_path, sample_data=df)
 print(f"\nSaved model {model} to path {model_save_path}")
 
 # save model metrics
-metrics_save_path = base_path+'/metrics.json'
+metrics_save_path = 'models/metrics.json'
 dict_to_json(avg_metrics, metrics_save_path)
 print(f"\nSaved model metrics to path {metrics_save_path}")

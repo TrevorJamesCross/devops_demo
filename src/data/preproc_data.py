@@ -18,7 +18,7 @@ import pandas as pd
 from mlem.api import save
 
 # import support libraries
-from os.path import expanduser
+import os
 import yaml
 
 # --------------------------
@@ -36,7 +36,7 @@ num_lagged_feats = params["num_lagged_features"]
 # -------------------
 
 # define data path
-data_path = f"{expanduser('~')}/projects/devops_demo/data/raw/ts_data.csv"
+data_path = os.path.join('data', 'raw', 'ts_data.csv')
 
 # pull data from path
 df = pd.read_csv(data_path, parse_dates=[0], index_col=0)
@@ -60,6 +60,6 @@ for lag_num in range(num_lagged_feats):
 # ------------------------------
 
 # save df_monthly_agg using mlem
-output_path = f"{expanduser('~')}/projects/devops_demo/data/preprocessed/ts_data_monthly.csv"
+output_path = os.path.join('data', 'preprocessed', 'ts_data_monthly.csv')
 save(df_monthly_agg, output_path)
 print(f"\nSaved aggregated time series data to path {output_path}")

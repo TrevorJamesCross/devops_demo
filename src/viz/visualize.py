@@ -15,11 +15,11 @@ import pandas as pd
 
 # import support libraries
 import sys
-from os.path import expanduser
+import os
 import yaml
 
 # import toolbox
-sys.path.append(f"{expanduser('~')}/projects/devops_demo/src")
+sys.path.append("src")
 from toolbox import *
 
 # --------------------------
@@ -37,12 +37,9 @@ num_lags = params["num_lags_to_plot"]
 # ---Pull & Split Data---
 # -----------------------
 
-# define data path
-base_path = f"{expanduser('~')}/projects/devops_demo/data"
-
 # pull data from path
-df_daily = pd.read_csv(base_path+'/raw/ts_data.csv', parse_dates=[0], index_col=0)
-df_monthly = pd.read_csv(base_path+'/preprocessed/ts_data_monthly.csv', parse_dates=[0], index_col=0)
+df_daily = pd.read_csv('data/raw/ts_data.csv', parse_dates=[0], index_col=0)
+df_monthly = pd.read_csv('data/preprocessed/ts_data_monthly.csv', parse_dates=[0], index_col=0)
 
 # drop lagged values from df_monthly
 df_monthly = df_monthly.loc[:, ~df_monthly.columns.str.startswith('lagged_values_')]
@@ -52,7 +49,7 @@ df_monthly = df_monthly.loc[:, ~df_monthly.columns.str.startswith('lagged_values
 # ----------------------------------
 
 # define base save path for figures
-base_path = f"{expanduser('~')}/projects/devops_demo/reports/figures"
+base_path = os.path.join('reports', 'figures')
 
 # plot timeseries
 plot_differenced_ts(df_daily,

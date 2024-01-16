@@ -1,7 +1,7 @@
 """
 DevOps Demo: Synthesize Data
 Author: Trevor Cross
-Last Updated: 01/05/24
+Last Updated: 01/11/24
 
 Create time series data using a gaussian process, & adding white noise & autoregressive
 effects.
@@ -31,7 +31,7 @@ from mlem.api import save
 
 # import support libraries
 import random as rand
-from os.path import expanduser
+import os
 
 # set random seed
 rs = 81
@@ -109,13 +109,14 @@ plt.ylabel("Value")
 plt.legend()
 
 # save plot
-save_path = f"{expanduser('~')}/projects/devops_demo/reports/figures/synthesized_data.png"
+save_path = os.path.join('reports', 'figures', 'synthesized_data.png')
 plt.savefig(save_path)
+print(f"\nSaved synthesized_data.png to path {save_path}")
 
 # define df with synthesized data
 df = pd.DataFrame(index=date_range, data=time_series, columns=['values'])
 
 # save df using mlem
-output_path = f"{expanduser('~')}/projects/devops_demo/data/raw/ts_data.csv"
+output_path = os.path.join('data', 'raw', 'ts_data.csv')
 save(df, output_path)
 print(f"\nSaved time series data to path {output_path}")

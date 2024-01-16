@@ -1,7 +1,7 @@
 """
 DevOps Demo: Toolbox
 Author: Trevor Cross
-Last Updated: 01/04/23
+Last Updated: 01/11/23
 
 Series of functions used to assist in project development
 """
@@ -12,7 +12,6 @@ Series of functions used to assist in project development
 
 # import standard libraries
 import pandas as pd
-import numpy as np
 
 # import plotting libraries
 import matplotlib.pyplot as plt
@@ -21,22 +20,11 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 
 # import scikit-learn libraries
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import (mean_squared_error, mean_absolute_error,
                              mean_absolute_percentage_error)
 
 # import support libraries
 import json
-
-# -------------------------------------
-# ---Define Data Wrangling Functions---
-# -------------------------------------
-
-# define function to generate splits by category column
-def split_by_cat_generator(df, cat_col, test_size=0.20, shuffle=False, rs=81):
-    for cat_name in df[cat_col].unique():
-        cat_df = df[df[cat_col] == cat_name]
-        yield train_test_split(cat_df, test_size=test_size, shuffle=shuffle, random_state=rs)
 
 # -------------------------------
 # ---Define Plotting Functions---

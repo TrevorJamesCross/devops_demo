@@ -1,9 +1,5 @@
 outs:
-- md5: f81119c62ae1fdd909752fded3a6b563
-  size: 54216
+- md5: ad57468ef8eaf526de1863c2fcc0ced4
+  size: 54205
   hash: md5
   path: ts_data.csv
-  cloud:
-    gcp_bucket:
-      etag: 08e1d1acd384d383031001
-      version_id: '1704897106618593'

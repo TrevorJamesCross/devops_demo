@@ -1,7 +1,7 @@
 artifacts:
   data:
-    hash: f81119c62ae1fdd909752fded3a6b563
-    size: 54216
+    hash: ad57468ef8eaf526de1863c2fcc0ced4
+    size: 54205
     type: dvc
     uri: ts_data.csv
 object_type: data

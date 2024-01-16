@@ -1,7 +1,7 @@
 artifacts:
   data:
-    hash: 0786baa569854384236a19e19a7c67cf
-    size: 2728
+    hash: 808f59a7d808994915011669ec4e0765
+    size: 3857
     type: dvc
     uri: ts_data_monthly.csv
 object_type: data
@@ -11,8 +11,10 @@ reader:
     - ''
     - values
     - lagged_values_1
+    - lagged_values_2
     dtypes:
     - object
+    - float64
     - float64
     - float64
     index_cols:
