@@ -19,6 +19,10 @@ jobs:
         with:
           python-version: '3.x'
 
+      - uses: google-github-actions/auth@v2
+        with:
+            credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
       - name: Write cml Report
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
