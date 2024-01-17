@@ -19,6 +19,10 @@ stages:
       hash: md5
       md5: 808f59a7d808994915011669ec4e0765
       size: 3857
+      cloud:
+        gcp_bucket:
+          etag: 08c9ebc0cfcee483031001
+          version_id: '1705501078336969'
     - path: data/preprocessed/ts_data_monthly.csv.mlem
       hash: md5
       md5: 4cbfeef50ab19cb5cfd991119ffc03a2
@@ -41,20 +45,20 @@ stages:
     params:
       params.yaml:
         visualize.differencing_param: 1
-        visualize.num_lags_to_plot: 25
+        visualize.num_lags_to_plot: 20
     outs:
     - path: reports/figures/daily_acf.png
       hash: md5
-      md5: f64ef1c027c5c3372e23c2497ceafec0
-      size: 73045
+      md5: 7424a11616746c6dcaef5bce29c01f81
+      size: 69115
     - path: reports/figures/daily_timeseries.png
       hash: md5
       md5: a79c90cdd08521d278be688d35c221f3
       size: 311841
     - path: reports/figures/monthly_acf.png
       hash: md5
-      md5: 34ffd7705d65a5b79fec21e3c0f1b89f
-      size: 77287
+      md5: 06d4e1816f86bc393a175980b28b5a05
+      size: 73114
     - path: reports/figures/monthly_timeseries.png
       hash: md5
       md5: 4d2e44e117cf4c1d57869ad431e89237
@@ -81,6 +85,10 @@ stages:
       hash: md5
       md5: 21a95d4c22eb7ed4d4f18115b2273319
       size: 615
+      cloud:
+        gcp_bucket:
+          etag: 08d1c7b9cfcee483031001
+          version_id: '1705501078217681'
     - path: models/metrics.json
       hash: md5
       md5: 704394d39f19aa15c801b48fe1c6433e
