@@ -5,8 +5,8 @@ stages:
     deps:
     - path: data/raw/ts_data.csv
       hash: md5
-      md5: ad57468ef8eaf526de1863c2fcc0ced4
-      size: 54205
+      md5: f9bed7345eb392e203b5e0275cd52494
+      size: 54231
     - path: src/data/preproc_data.py
       hash: md5
       md5: 3b3b048b1bfad359d1d9409a430bacb1
@@ -17,27 +17,27 @@ stages:
     outs:
     - path: data/preprocessed/ts_data_monthly.csv
       hash: md5
-      md5: 808f59a7d808994915011669ec4e0765
-      size: 3857
+      md5: cefc345b08a11172db3fabc1b3c41ba4
+      size: 3847
       cloud:
         gcp_bucket:
-          etag: 08c9ebc0cfcee483031001
-          version_id: '1705501078336969'
+          etag: 08dae0b0ebefe483031001
+          version_id: '1705509995163738'
     - path: data/preprocessed/ts_data_monthly.csv.mlem
       hash: md5
-      md5: 4cbfeef50ab19cb5cfd991119ffc03a2
+      md5: 3ac90272cddc4df715ba4662a53f13ab
       size: 427
   visualize:
     cmd: python src/viz/visualize.py
     deps:
     - path: data/preprocessed/ts_data_monthly.csv
       hash: md5
-      md5: 808f59a7d808994915011669ec4e0765
-      size: 3857
+      md5: cefc345b08a11172db3fabc1b3c41ba4
+      size: 3847
     - path: data/raw/ts_data.csv
       hash: md5
-      md5: ad57468ef8eaf526de1863c2fcc0ced4
-      size: 54205
+      md5: f9bed7345eb392e203b5e0275cd52494
+      size: 54231
     - path: src/viz/visualize.py
       hash: md5
       md5: 01e1ca52fc6a510c8e87ac382ce1dadf
@@ -49,27 +49,27 @@ stages:
     outs:
     - path: reports/figures/daily_acf.png
       hash: md5
-      md5: 7424a11616746c6dcaef5bce29c01f81
-      size: 69115
+      md5: 08010a9aba71ed25be6a4d430f417894
+      size: 69164
     - path: reports/figures/daily_timeseries.png
       hash: md5
-      md5: a79c90cdd08521d278be688d35c221f3
-      size: 311841
+      md5: 834d2d74a8633d85b1e6aae627332bdb
+      size: 304132
     - path: reports/figures/monthly_acf.png
       hash: md5
-      md5: 06d4e1816f86bc393a175980b28b5a05
-      size: 73114
+      md5: 391206af3a338cd586adb4f354f0a77f
+      size: 72440
     - path: reports/figures/monthly_timeseries.png
       hash: md5
-      md5: 4d2e44e117cf4c1d57869ad431e89237
-      size: 159593
+      md5: 4af6b324d333b24d4b5273e7061924e2
+      size: 153154
   train_model:
     cmd: python src/models/train_model.py
     deps:
     - path: data/preprocessed/ts_data_monthly.csv
       hash: md5
-      md5: 808f59a7d808994915011669ec4e0765
-      size: 3857
+      md5: cefc345b08a11172db3fabc1b3c41ba4
+      size: 3847
     - path: src/models/train_model.py
       hash: md5
       md5: ece2e97a6408ccbafad71b125d70175e
@@ -83,17 +83,17 @@ stages:
     outs:
     - path: models/lr_model
       hash: md5
-      md5: 21a95d4c22eb7ed4d4f18115b2273319
+      md5: f3ef77a4d0afe25810c4e9ee50a15168
       size: 615
       cloud:
         gcp_bucket:
-          etag: 08d1c7b9cfcee483031001
-          version_id: '1705501078217681'
+          etag: 08adaaa0ebefe483031001
+          version_id: '1705509994894637'
     - path: models/metrics.json
       hash: md5
-      md5: 704394d39f19aa15c801b48fe1c6433e
-      size: 129
+      md5: b0bb8e78fe2d453de268d2f3885995d2
+      size: 130
     - path: reports/figures/validation_forecasts.png
       hash: md5
-      md5: 90cdb12a56195cf6bac17ef2c3bf3e02
-      size: 140044
+      md5: 57d65199f0bf101da6c69150b1afb13a
+      size: 135675

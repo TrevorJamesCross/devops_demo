@@ -1,6 +1,6 @@
 artifacts:
   data:
-    hash: 6a32bd6a1198958820960f4ee5340eea
+    hash: f678615aee569c28b0b054b281e609a6
     size: 43
     type: dvc
     uri: live_preds.csv
