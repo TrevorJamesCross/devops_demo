@@ -9,22 +9,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: iterative/setup-cml@v2
-
-      - uses: iterative/setup-dvc@v1
-
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      - uses: iterative/setup-cml@v2
+
+      - uses: iterative/setup-dvc@v1
 
       - name: Write cml Report
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
 
           # install requirements from file
