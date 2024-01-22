@@ -48,6 +48,8 @@ stages:
     - reports/figures/validation_forecasts.png:
         cache: false # track using Git; not dvc
     - models/lr_model
+    - models/lr_model.mlem:
+        cache: false # track using Git; not dvc
     - models/metrics.json:
         cache: false # track using Git; not dvc
 metrics:

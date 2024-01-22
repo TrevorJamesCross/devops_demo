@@ -89,6 +89,10 @@ stages:
         aws_bucket:
           etag: f3ef77a4d0afe25810c4e9ee50a15168
           version_id: 6dn7vQ5RZczauQba.M1NWDgD1psaPab9
+    - path: models/lr_model.mlem
+      hash: md5
+      md5: 67522224ea8800597f81e60b795ac392
+      size: 914
     - path: models/metrics.json
       hash: md5
       md5: b0bb8e78fe2d453de268d2f3885995d2
