@@ -4,6 +4,6 @@ outs:
   hash: md5
   path: ts_data.csv
   cloud:
-    gcp_bucket:
-      etag: 08c5b4aeebefe483031001
-      version_id: '1705509995125317'
+    aws_bucket:
+      etag: f9bed7345eb392e203b5e0275cd52494
+      version_id: 2TDC2G4_K1IfsxDAH5zpqSRmyU1gJMzM

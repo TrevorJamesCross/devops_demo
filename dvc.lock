@@ -20,9 +20,9 @@ stages:
       md5: cefc345b08a11172db3fabc1b3c41ba4
       size: 3847
       cloud:
-        gcp_bucket:
-          etag: 08dae0b0ebefe483031001
-          version_id: '1705509995163738'
+        aws_bucket:
+          etag: cefc345b08a11172db3fabc1b3c41ba4
+          version_id: tktqjWhx4uSevLv9rAj5hXkaC0LBafZG
     - path: data/preprocessed/ts_data_monthly.csv.mlem
       hash: md5
       md5: 3ac90272cddc4df715ba4662a53f13ab
@@ -86,9 +86,9 @@ stages:
       md5: f3ef77a4d0afe25810c4e9ee50a15168
       size: 615
       cloud:
-        gcp_bucket:
-          etag: 08adaaa0ebefe483031001
-          version_id: '1705509994894637'
+        aws_bucket:
+          etag: f3ef77a4d0afe25810c4e9ee50a15168
+          version_id: 6dn7vQ5RZczauQba.M1NWDgD1psaPab9
     - path: models/metrics.json
       hash: md5
       md5: b0bb8e78fe2d453de268d2f3885995d2
