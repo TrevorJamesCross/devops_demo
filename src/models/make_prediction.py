@@ -1,9 +1,9 @@
 """
 DevOps Demo: Make Prediction
 Author: Trevor Cross
-Last Updated: 01/11/24
+Last Updated: 01/22/24
 
-Pull model, make next step prediction, and append prediction to local CSV.
+Pull model, make next step prediction, and save prediction to local file.
 """
 
 # ----------------------
