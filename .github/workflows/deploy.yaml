@@ -27,8 +27,8 @@ jobs:
     - name: Build and push Docker image
       id: build-image
       run: |
-        docker build -t ${{ secrets.ECR_REGISTRY }}/lr_model:latest ./build
-        docker push ${{ secrets.ECR_REGISTRY }}/lr_model:latest
+        docker build -t ${{ secrets.ECR_REGISTRY }}:latest ./build
+        docker push ${{ secrets.ECR_REGISTRY }}:latest
 
   deploy:
     runs-on: ubuntu-latest
