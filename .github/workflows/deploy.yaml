@@ -41,7 +41,7 @@ jobs:
 
     - name: Deploy to ECS
       run: |
-        aws ecs update-service --cluster devops_cluster --service serve --force-new-deployment
+        aws ecs update-service --cluster DevOpsCluster --service ServeModel --force-new-deployment
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
