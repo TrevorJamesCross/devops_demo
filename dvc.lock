@@ -45,20 +45,20 @@ stages:
     params:
       params.yaml:
         visualize.differencing_param: 1
-        visualize.num_lags_to_plot: 10
+        visualize.num_lags_to_plot: 20
     outs:
     - path: reports/figures/daily_acf.png
       hash: md5
-      md5: 894b63326d73361bc9ad07fd19f7205c
-      size: 69171
+      md5: 08010a9aba71ed25be6a4d430f417894
+      size: 69164
     - path: reports/figures/daily_timeseries.png
       hash: md5
       md5: 834d2d74a8633d85b1e6aae627332bdb
       size: 304132
     - path: reports/figures/monthly_acf.png
       hash: md5
-      md5: 55e5db20a1fffa43a3c67d210234fc37
-      size: 72570
+      md5: 391206af3a338cd586adb4f354f0a77f
+      size: 72440
     - path: reports/figures/monthly_timeseries.png
       hash: md5
       md5: 4af6b324d333b24d4b5273e7061924e2
@@ -79,7 +79,7 @@ stages:
         train_model.forecast_size: 1
         train_model.model_fit_intercept: true
         train_model.model_force_positive_coeffs: false
-        train_model.num_splits: 20
+        train_model.num_splits: 25
     outs:
     - path: models/lr_model
       hash: md5
@@ -95,9 +95,9 @@ stages:
       size: 914
     - path: models/metrics.json
       hash: md5
-      md5: b0bb8e78fe2d453de268d2f3885995d2
-      size: 130
+      md5: 8a9c63d2a29805ef42aa58fc573e22ff
+      size: 132
     - path: reports/figures/validation_forecasts.png
       hash: md5
-      md5: 57d65199f0bf101da6c69150b1afb13a
-      size: 135675
+      md5: 26da34d96469db12c87512fd59c1029c
+      size: 136388
