@@ -53,7 +53,7 @@ jobs:
 
           # plot validation forecasts
           echo "## Plots" >> reports/experiment_report.md
-          echo '![](./reports/figures/validation_forecasts.png "Validation Forecasts")' >> reports/experiment_report.md
+          echo '![](reports/figures/validation_forecasts.png "Validation Forecasts")' >> reports/experiment_report.md
 
           # create cml report
           cml comment create reports/experiment_report.md
