@@ -6,7 +6,7 @@ visualize:
     num_lags_to_plot: 20
 
 train_model:
-    num_splits: 25
+    num_splits: 30
     forecast_size: 1
     model_fit_intercept: True
     model_force_positive_coeffs: False
