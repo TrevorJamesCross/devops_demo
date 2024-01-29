@@ -18,11 +18,10 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install Node.js
-        uses: actions/setup-node@v2
-
       - name: Install CML
-        uses: iterative/setup-cml@v1
+        uses: iterative/setup-cml@v2
+        with:
+          vega: false
 
       - name: Install DVC
         uses: iterative/setup-dvc@v1
