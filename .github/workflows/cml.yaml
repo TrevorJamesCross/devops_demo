@@ -46,7 +46,6 @@ jobs:
 
           # compare metrics
           echo "## Metrics: Experiment vs. Production" >> reports/experiment_report.md
-          git fetch --depth=1 origin prod:prod
           dvc metrics diff --md prod >> reports/experiment_report.md
 
           # plot validation forecasts
