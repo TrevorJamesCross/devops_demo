@@ -1,6 +1,9 @@
 name: Reproduce & Report
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - prod
 
 jobs:
   reproduce-and-report:
