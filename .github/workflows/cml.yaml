@@ -8,18 +8,18 @@ jobs:
 
     steps:
       - name: Checkout Repository
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Install Python
-      - uses: actions/setup-python@v4
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
       - name: Install CML
-      - uses: iterative/setup-cml@v1
+        uses: iterative/setup-cml@v1
 
       - name: Install DVC
-      - uses: iterative/setup-dvc@v1
+        uses: iterative/setup-dvc@v1
 
       - name: Reproduce Pipeline
         env:
