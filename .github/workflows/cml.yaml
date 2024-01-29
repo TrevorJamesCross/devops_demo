@@ -1,0 +1,54 @@
+name: Reproduce & Report
+
+on: [push]
+
+jobs:
+  reproduce-and-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+      - uses: actions/checkout@v3
+
+      - name: Install Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install CML
+      - uses: iterative/setup-cml@v1
+
+      - name: Install DVC
+      - uses: iterative/setup-dvc@v1
+
+      - name: Reproduce Pipeline
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+
+          # install requirements
+          pip install -r requirements.txt
+
+          # pull data from dvc remote
+          dvc pull --run-cache
+
+          # reproduce dvc pipeline
+          dvc repro
+
+      - name: Create CML Report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+
+          # compare metrics
+          echo "## Metrics: Experiment vs. Production" >> reports/experiment_report.md
+          git fetch --prune --unshallow
+          dvc metrics diff --show-md prod >> reports/experiment_report.md
+
+          # plot validation forecasts
+          echo "## Plots" >> reports/experiment_report.md
+          echo '![](./reports/figures/validation_forecasts.png "Validation Forecasts")' >> reports/experiment_report.md
+
+          # create cml report
+          cml comment create reports/experiment_report.md

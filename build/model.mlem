@@ -2,7 +2,8 @@ artifacts:
   data:
     hash: f3ef77a4d0afe25810c4e9ee50a15168
     size: 615
-    uri: model
+    type: dvc
+    uri: lr_model
 call_orders:
   predict:
   - - model
@@ -42,7 +43,7 @@ requirements:
 - module: sklearn
   package_name: scikit-learn
   version: 1.3.2
-- module: numpy
-  version: 1.26.2
 - module: pandas
   version: 2.1.4
+- module: numpy
+  version: 1.26.2

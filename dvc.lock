@@ -79,7 +79,7 @@ stages:
         train_model.forecast_size: 1
         train_model.model_fit_intercept: true
         train_model.model_force_positive_coeffs: false
-        train_model.num_splits: 20
+        train_model.num_splits: 30
     outs:
     - path: models/lr_model
       hash: md5
@@ -91,13 +91,13 @@ stages:
           version_id: 6dn7vQ5RZczauQba.M1NWDgD1psaPab9
     - path: models/lr_model.mlem
       hash: md5
-      md5: 67522224ea8800597f81e60b795ac392
+      md5: cf56612073761423d34777ce365993ed
       size: 914
     - path: models/metrics.json
       hash: md5
-      md5: b0bb8e78fe2d453de268d2f3885995d2
-      size: 130
+      md5: f7b76c87c74518de13eed1693cb33b2b
+      size: 129
     - path: reports/figures/validation_forecasts.png
       hash: md5
-      md5: 57d65199f0bf101da6c69150b1afb13a
-      size: 135675
+      md5: 473f6b53dc7b5c1b802c858d8f603a4e
+      size: 137228
